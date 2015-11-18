@@ -87,4 +87,4 @@ module.exports = angular
       continuePromotion: continuePromotion,
       stopPromotion: stopPromotion,
     };
-  }).name;
+  });

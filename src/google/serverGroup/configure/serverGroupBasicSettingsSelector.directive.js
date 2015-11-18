@@ -29,5 +29,4 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.basicSettin
       $uibModalStack: $uibModalStack,
       $state: $state,
     }));
-  })
-.name;
+  });

@@ -15,5 +15,4 @@ module.exports = angular.module('spinnaker.core.config.defalutTime', [])
         }
       };
     };
-  })
-  .name;
+  });

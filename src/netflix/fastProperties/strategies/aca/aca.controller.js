@@ -53,5 +53,4 @@ module.exports = angular
     vm.update = vm.submit;
 
     return vm;
-  })
-  .name;
+  });

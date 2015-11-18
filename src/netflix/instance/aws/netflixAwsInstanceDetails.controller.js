@@ -58,4 +58,4 @@ module.exports = angular.module('spinnaker.netflix.instance.aws.controller', [
     };
 
   }
-).name;
+);

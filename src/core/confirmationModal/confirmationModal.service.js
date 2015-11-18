@@ -91,4 +91,4 @@ module.exports = angular.module('spinnaker.core.confirmationModal.service', [
     this.cancel = function () {
       $modalInstance.dismiss();
     };
-  }).name;
+  });

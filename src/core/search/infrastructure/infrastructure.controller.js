@@ -155,4 +155,4 @@ module.exports = angular.module('spinnaker.search.infrastructure.controller', [
 
     this.loadRecentItems();
 
-  }).name;
+  });

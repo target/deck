@@ -22,4 +22,4 @@ module.exports = angular.module('spinnaker.core.templateOverride.registry', [
       };
     };
 
-  }).name;
+  });

@@ -80,4 +80,4 @@ module.exports = angular.module('spinnaker.cf.serverGroup.details.resize.control
     this.cancel = function () {
       $modalInstance.dismiss();
     };
-  }).name;
+  });

@@ -8,5 +8,4 @@ module.exports = angular
     require('./defaultTimeZone'),
     require('./featureFlags'),
     require('./whatsNew')
-  ])
-  .name;
+  ]);

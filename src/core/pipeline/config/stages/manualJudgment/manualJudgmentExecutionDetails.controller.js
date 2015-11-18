@@ -46,4 +46,4 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.manualJudgment.ex
     this.stop = function () {
       provideJudgment('stop', 'TERMINAL');
     };
-  }).name;
+  });

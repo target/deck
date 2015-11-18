@@ -16,6 +16,5 @@ module.exports = angular.module('netflix.spinnaker', [
 ])
 .config(function(defaultTimeZoneProvider) {
   defaultTimeZoneProvider.set(__DEFAULT_TIME_ZONE__);
-})
-.name;
+});
 

@@ -53,5 +53,4 @@ module.exports = angular.module('spinnaker.core.config.apiHost', [])
         }
       };
     };
-  })
-  .name;
+  });
