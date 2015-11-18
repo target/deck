@@ -16,7 +16,7 @@ describe('Service: clusterFilterService', function () {
     window.module(
       require('./clusterFilter.service.js'),
       require('./clusterFilter.model.js'),
-      require('../../../../../../test/mock/mockApplicationData.js')
+      require('../../../../test/mock/mockApplicationData.js')
     )
   );
 

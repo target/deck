@@ -3,16 +3,16 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.authentication.interceptor.service', [
-  require('../config/settings.js'),
+  require('../config/apiHost'),
   require('./authentication.service.js')
 ])
-  .factory('authenticationInterceptor', function ($q, settings, authenticationService) {
+  .factory('authenticationInterceptor', function ($q, apiHost, authenticationService) {
 
     return {
       request: function (config) {
         var deferred = $q.defer();
         // pass through to authentication endpoint and non-http resources
-        if (config.url === settings.authEndpoint || config.url.indexOf('http') !== 0) {
+        if (config.url === apiHost.authEndpoint() || config.url.indexOf('http') !== 0) {
           deferred.resolve(config);
         } else {
           if (authenticationService.getAuthenticatedUser().authenticated) {

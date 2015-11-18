@@ -2,7 +2,7 @@
 
 describe('authenticationInterceptor', function() {
 
-  var interceptor, $q, settings, authenticationService, $rootScope;
+  var interceptor, $q, settings, apiHost, authenticationService, $rootScope;
 
   beforeEach(
     window.module(
@@ -10,18 +10,19 @@ describe('authenticationInterceptor', function() {
     )
   );
 
-  beforeEach(window.inject(function(authenticationInterceptor, _$q_, _settings_, _authenticationService_, _$rootScope_) {
+  beforeEach(window.inject(function(authenticationInterceptor, _$q_, _apiHost_, _authenticationService_, _$rootScope_) {
     interceptor = authenticationInterceptor;
     $q = _$q_;
-    settings = _settings_;
+    apiHost = _apiHost_;
     authenticationService = _authenticationService_;
     $rootScope = _$rootScope_;
+    apiHost.setAuthEndpoint('auth.netflix.net');
   }));
 
   describe('non-intercepted requests', function() {
     it('resolves immediately for auth endpoint', function() {
       var resolved = null;
-      var request = { url: settings.authEndpoint };
+      var request = { url: apiHost.authEndpoint() };
       interceptor.request(request).then(function(result) { resolved = result; });
       $rootScope.$digest();
       expect(resolved).toBe(request);

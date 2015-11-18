@@ -3,14 +3,14 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.authentication.initializer.service', [
-  require('../config/settings.js'),
+  require('../config/apiHost'),
   require('./authentication.service.js'),
 ])
-  .factory('authenticationInitializer', function ($http, $rootScope, redirectService, authenticationService, settings, $location) {
+  .factory('authenticationInitializer', function ($http, $rootScope, redirectService, authenticationService, apiHost, $location) {
 
     function authenticateUser() {
       $rootScope.authenticating = true;
-      $http.get(settings.authEndpoint)
+      $http.get(apiHost.authEndpoint())
         .success(function (data) {
           if (data.email) {
             authenticationService.setAuthenticatedUser(data.email);
@@ -21,7 +21,7 @@ module.exports = angular.module('spinnaker.authentication.initializer.service', 
           var redirect = headers('X-AUTH-REDIRECT-URL');
           if (status === 401 && redirect) {
             var callback = encodeURIComponent($location.absUrl());
-            redirectService.redirect(settings.gateUrl + redirect + '?callback=' + callback);
+            redirectService.redirect(apiHost.baseUrl() + redirect + '?callback=' + callback);
           } else {
             $rootScope.authenticating = false;
           }

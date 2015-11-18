@@ -1,0 +1,224 @@
+<div class="modal-page">
+  <modal-close></modal-close>
+  <div class="modal-header">
+    <h3 data-purpose="modal-header">New Application</h3>
+  </div>
+  <div ng-if="newAppModal.initializing" style="height: 200px">
+    <h3 us-spinner="{radius:30, width:8, length: 16}"></h3>
+  </div>
+  <form role="form" class="container-fluid" novalidate name="newApplicationForm" ng-if="!newAppModal.initializing">
+    <div class="modal-body">
+      <div class="form-group row">
+        <div class="col-sm-3 sm-label-left">Name *</div>
+        <div class="col-sm-9">
+          <input type="text"
+                 autofocus
+                 name="name"
+                 ng-pattern="/^[a-zA-z_0-9.]*$/"
+                 class="form-control input-sm"
+                 data-purpose="application-name"
+                 ng-model="newAppModal.application.name"
+                 placeholder="Enter an application name"
+                 validate-unique="newAppModal.appNameList"
+                 required
+                 id="applicationName">
+          </input>
+        </div>
+      </div>
+
+      <div class="form-group row slide-in animated" ng-if="newApplicationForm.name.$error.pattern">
+        <div class="col-sm-9 col-sm-offset-3 error-message">
+          <span>Only dot(.) and underscore(_) special characters are allowed.</span>
+        </div>
+      </div>
+
+      <div class="form-group row slide-in animated" ng-if="newApplicationForm.name.$error.validateUnique">
+        <div class="col-sm-9 col-sm-offset-3 error-message">
+          <span>Application name must be unique.</span>
+        </div>
+      </div>
+
+      <div class="form-group row slide-in animated" ng-if="newAppModal.application.name.indexOf('_') > -1 || newAppModal.application.name.indexOf('.') > -1">
+        <div class="col-sm-9 col-sm-offset-3 warn-message">
+          <span>If the application's name contains an underscore(_) or dot(.), you will not be able to create a load balancer,
+            preventing it from being used as a front end service.</span>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-3 sm-label-left">Owner Email *</div>
+        <div class="col-sm-9">
+          <input type="email"
+                 name="email"
+                 ng-class="{'ng-invalid ng-dirty':newAppModal.emailErrorMsg.length > 0 }"
+                 class="form-control input-sm "
+                 data-purpose="application-email"
+                 ng-model="newAppModal.application.email"
+                 placeholder="Enter an email address"
+                 required
+                 id="ownerEmail">
+          </input>
+        </div>
+      </div>
+
+      <div class="form-group row slide-in animated" ng-if="newApplicationForm.email.$dirty && newApplicationForm.email.$invalid">
+        <div class="col-sm-9 col-sm-offset-3 error-message">
+          <span>Please enter a valid email address</span>
+        </div>
+      </div>
+
+      <div class="form-group row slide-in animated" ng-if="newAppModal.emailErrorMsg">
+        <div class="col-sm-9 col-sm-offset-3 error-message" ng-repeat="errorMsg in newAppModal.emailErrorMsg">
+          {{errorMsg}} <small><span class="glyphicon glyphicon-remove" ng-click="newAppModal.clearEmailMsg()" style="cursor: pointer; padding-left: 10px"></span></small>
+
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-3 sm-label-left" id="pagerDutyApiKeyLabel">PagerDuty API Key</div>
+        <div class="col-sm-9">
+          <input type="text"
+                 class="form-control input-sm"
+                 ng-model="newAppModal.application.pdApiKey"
+                 placeholder="Enter your PagerDuty API key"
+                 id="pagerDutyApiKey">
+          </input>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3 sm-label-left" id="repoType">Repo Type</div>
+        <div class="col-sm-9">
+          <select
+              class="form-control input-sm"
+              ng-options="repoType for repoType in ['stash', 'github']"
+              ng-model="newAppModal.application.repoType">
+            <option value="">Select Repo Type</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3 sm-label-left" id="repoProjectKey">Repo Project</div>
+        <div class="col-sm-9">
+          <input type="text"
+                 class="form-control input-sm"
+                 ng-model="newAppModal.application.repoProjectKey"
+                 placeholder="Enter your source repository project name"
+                 id="repoProjectKey">
+          </input>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3 sm-label-left" id="repoSlug">Repo Name</div>
+        <div class="col-sm-9">
+          <input type="text"
+                 class="form-control input-sm"
+                 ng-model="newAppModal.application.repoSlug"
+                 placeholder="Enter your source repository name (not the URL)"
+                 pattern="^((?!\:\/\/).)*$"
+                 id="repoSlug"
+                 name="repoSlug"
+          >
+          </input>
+        </div>
+      </div>
+
+      <div class="form-group row slide-in animated" ng-messages="newApplicationForm.repoSlug.$error">
+        <div class="col-sm-9 col-sm-offset-3 error-message" ng-message="pattern">
+          Enter your source repository name (not the URL).
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-3 sm-label-left">Description</div>
+        <div class="col-sm-9">
+          <textarea
+              class="form-control input-sm"
+              ng-model="newAppModal.application.description"
+              placeholder="Enter a description"
+              data-purpose="application-description"
+              id="applicationDescription">
+          </textarea>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-md-3 sm-label-left">Account(s) *</div>
+        <div class="col-md-9">
+          <!-- TODO: We need to rethink the "account" field for a multi-platform system -->
+          <account-select-field component="newAppModal.application" field="account" accounts="newAppModal.accounts" provider="'aws'" multiselect="true"></account-select-field>
+        </div>
+      </div>
+
+      <div class="form-group row" ng-if="newAppModal.cloudProviders.length > 1">
+        <div class="col-md-3 sm-label-left">Cloud Providers</div>
+        <div class="col-md-5">
+          <ui-select multiple ng-model="newAppModal.application.cloudProviders" class="form-control input-sm">
+            <ui-select-match>
+              {{$item}}
+            </ui-select-match>
+            <ui-select-choices repeat="provider in newAppModal.cloudProviders | filter: $select.search">
+              {{provider}}
+            </ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-3 sm-label-left">Instance Health</div>
+        <div class="col-sm-9 checkbox" style="margin-bottom: 0">
+          <label>
+            <input type="checkbox"
+                   ng-model="newAppModal.application.platformHealthOnly"
+                   id="applicationPlatformHealthOnly">
+            </input>
+            Consider only cloud provider health when executing tasks
+            <help-field key="application.platformHealthOnly"></help-field>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-3 sm-label-left"></div>
+        <div class="col-sm-9 checkbox" style="margin-top: 0">
+          <label>
+            <input type="checkbox"
+                   ng-model="newAppModal.application.platformHealthOnlyShowOverride"
+                   id="applicationPlatformHealthOnlyShowOverride">
+            </input>
+            Show health override option for each operation
+            <help-field key="application.showPlatformHealthOverride"></help-field>
+          </label>
+        </div>
+      </div>
+      <div class="form-group row slide-in animated" ng-if="newAppModal.errorMsgs.length">
+        <div class="col-md-12">
+          <div class="alert alert-danger">
+            <div ng-repeat="errorMsg in newAppModal.errorMsgs">
+              <status-glyph item="{isFailed: true}"></status-glyph> {{errorMsg}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-md-12">
+          <em>* Required</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <a href class="btn btn-default" ng-click="$dismiss()">Cancel</a>
+      <button type="submit"
+              class="btn btn-primary"
+              data-purpose="submit"
+              ng-disabled="newApplicationForm.$invalid || !newAppModal.application.hasOwnProperty('account') || (newAppModal.application.hasOwnProperty('account') && newAppModal.application.account.length < 1)|| newAppModal.submitting"
+              ng-click="newAppModal.submit()">
+        <span class="glyphicon glyphicon-ok-circle" ng-if="!newAppModal.submitting"></span>
+        <span ng-if="newAppModal.submitting" style="display: inline-block; position: relative; width: 16px; height: 15px">
+          <span us-spinner="{color: '#ffffff', left: '3px', top: '10px', radius:3, width: 2, length: 3}"></span>
+        </span>
+        Create
+      </button>
+    </div>
+  </form>
+</div>

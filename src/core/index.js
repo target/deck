@@ -102,8 +102,8 @@ module.exports = angular
     require('./pipeline/config/stages/jenkins/jenkinsStage.module.js'),
     require('./pipeline/config/stages/manualJudgment/manualJudgmentStage.module.js'),
     require('./pipeline/config/stages/pipeline/pipelineStage.module.js'),
-    require('./pipeline/config/stages/quickPatchAsg/bulkQuickPatchStage/bulkQuickPatchStage.module.js'),
-    require('./pipeline/config/stages/quickPatchAsg/quickPatchAsgStage.module.js'),
+    //require('./pipeline/config/stages/quickPatchAsg/bulkQuickPatchStage/bulkQuickPatchStage.module.js'),
+    //require('./pipeline/config/stages/quickPatchAsg/quickPatchAsgStage.module.js'),
     require('./pipeline/config/stages/resizeAsg/resizeAsgStage.module.js'),
     require('./pipeline/config/stages/scaleDownCluster/scaleDownClusterStage.module.js'),
     require('./pipeline/config/stages/script/scriptStage.module.js'),
@@ -193,8 +193,8 @@ module.exports = angular
     $modalProvider.options.backdrop = 'static';
     $modalProvider.options.keyboard = false;
   })
-  .config(function(RestangularProvider, settings, apiHostProvider ) {
-    RestangularProvider.setBaseUrl(settings.gateUrl);
+  .config(function(RestangularProvider, apiHostProvider ) {
+    RestangularProvider.setBaseUrl(apiHostProvider.baseUrl());
     RestangularProvider.setDefaultHttpFields({timeout: apiHostProvider.getPollSchedule() * 2 + 5000}); // TODO: replace with apiHost call
   })
   .config(function($httpProvider){

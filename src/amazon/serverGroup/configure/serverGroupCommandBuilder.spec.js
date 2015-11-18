@@ -1,7 +1,7 @@
 'use strict';
 
 describe('awsServerGroupCommandBuilder', function() {
-  const AccountServiceFixture = require('../../../../../../test/fixture/AccountServiceFixtures');
+  const AccountServiceFixture = require('../../../../test/fixture/AccountServiceFixtures');
 
   beforeEach(
     window.module(

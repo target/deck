@@ -20,7 +20,7 @@ module.exports = angular.module('spinnaker.core.search.service', [
       };
 
       return $http({
-        url: apiHost.host() + '/search',
+        url: apiHost.baseUrl() + '/search',
         params: angular.extend(defaultParams, params),
         timeout: apiHost.getPollSchedule() * 2 + 5000, // TODO: replace with apiHost call
       })

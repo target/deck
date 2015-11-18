@@ -4,52 +4,53 @@ const angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.config.apiHost', [])
   .provider('apiHost', function() {
-    let host = null;
-    let authEndpoint = null;
-    let useHttps = true;
-    let authEnabled = false;
-    let pollSchedule = 30000;
+    this.host = null;
+    this.authEndpoint = null;
+    this.useHttps = true;
+    this.authEnabled = false;
+    this.pollSchedule = 30000;
 
     this.$get = function() {
+      var that = this;
       return {
         setHost(h) {
-          host = h;
+          that.host = h;
         },
         setAuthEndpoint(endpoint) {
-          authEndpoint = endpoint;
+          that.authEndpoint = endpoint;
         },
         useHttps(value) {
-          useHttps = value;
+          that.useHttps = value;
         },
         host() {
-          return host;
+          return that.host;
         },
         authEndpoint() {
-          if (authEndpoint === null) {
+          if (that.authEndpoint === null) {
             throw ("Authentication endpoint has not been set. Set with apiHostProvider#setAuthEndpoint");
           }
-          return authEndpoint;
+          return that.authEndpoint;
         },
         baseUrl() {
-          if (host === null) {
+          if (that.host === null) {
             throw ("API host has not been set. Set with apiHostProvider#setHost");
           }
-          return useHttps ? `https://${ host }` : `http://${ host }`;
+          return useHttps ? `https://${ that.host }` : `http://${ that.host }`;
         },
         authEnabled() {
-          return authEnabled;
+          return that.authEnabled;
         },
         enableAuth() {
-          authEnabled = true;
+          that.authEnabled = true;
         },
         disableAuth() {
-          authEnabled = false;
+          that.authEnabled = false;
         },
         setPollSechedule(pollScheduleInMillis) {
-          pollSchedule = pollScheduleInMillis;
+          that.pollSchedule = pollScheduleInMillis;
         },
         getPollSchedule() {
-          return pollSchedule;
+          return that.pollSchedule;
         }
       };
     };
