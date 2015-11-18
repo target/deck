@@ -26,13 +26,13 @@ module.exports = angular.module('spinnaker.core.config.apiHost', [])
         },
         authEndpoint() {
           if (authEndpoint === null) {
-            throw("Authentication endpoint has not been set. Set with apiHostProvider#setAuthEndpoint");
+            throw ("Authentication endpoint has not been set. Set with apiHostProvider#setAuthEndpoint");
           }
           return authEndpoint;
         },
         baseUrl() {
-          if (baseUrl === null) {
-            throw("API host has not been set. Set with apiHostProvider#setHost");
+          if (host === null) {
+            throw ("API host has not been set. Set with apiHostProvider#setHost");
           }
           return useHttps ? `https://${ host }` : `http://${ host }`;
         },

@@ -17,7 +17,7 @@ module.exports = angular
           return whatsNew.gistId;
         },
         setGistid(gistId) {
-          whatsNew.gistId = gistId ;
+          whatsNew.gistId = gistId;
         },
         fileName() {
           return whatsNew.fileName;
@@ -36,4 +36,4 @@ module.exports = angular
         }
       };
     };
-  })
+  });
