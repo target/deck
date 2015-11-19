@@ -127,43 +127,13 @@ module.exports = angular
     require('./utils/utils.module.js'),
 
     require('./validation/validation.module.js'),
-  ])
+  ]);
   .run(function($rootScope, $log, $state, featureFlagProvider) {
 
     $rootScope.feature = featureFlagProvider.getAll();
 
     $rootScope.$state = $state; // TODO: Do we really need this?
 
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-      $log.debug(event.name, {
-        event: event,
-        toState: toState,
-        toParams: toParams,
-        fromState: fromState,
-        fromParams: fromParams
-      });
-    });
-
-    $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error) {
-      $log.debug(event.name, {
-        event: event,
-        toState: toState,
-        toParams: toParams,
-        fromState: fromState,
-        fromParams: fromParams,
-        error: error
-      });
-    });
-
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      $log.debug(event.name, {
-        event: event,
-        toState: toState,
-        toParams: toParams,
-        fromState: fromState,
-        fromParams: fromParams
-      });
-    });
   })
   .run(function($templateCache) {
     $templateCache.put('template/popover/popover.html',

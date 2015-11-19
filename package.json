@@ -40,8 +40,8 @@
     "ui-select": "git://github.com/angular-ui/ui-select.git#v0.12.1"
   },
   "engines": {
-    "node": ">=0.10.0",
-    "npm": ">=2.0.0"
+    "node": "~0.12.0",
+    "npm": "^2.0.0"
   },
   "scripts": {
     "build": "node $(npm bin/webpack --config ./src/webpack.config.js",

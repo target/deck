@@ -2,7 +2,9 @@
 
 const angular = require('angular');
 
-module.exports = angular.module('spinnaker.core.config.apiHost', [])
+module.exports = angular.module('spinnaker.core.config.apiHost', [
+  require('restangular'),
+])
   .provider('apiHost', function() {
     this.host = null;
     this.authEndpoint = null;
