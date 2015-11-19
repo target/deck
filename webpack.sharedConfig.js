@@ -17,7 +17,7 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'ng-annotate!babel!envify!eslint',
+        loader: 'ng-annotate!angular!babel!envify!eslint',
         exclude: /node_modules/,
       },
       {
@@ -37,13 +37,6 @@ module.exports = {
         loader: 'json-loader'
       }
     ],
-  },
-  definitions: {
-    "__NETFLIX_ENABLED__": true || process.env.NETFLIX_ENABLED,
-    "__CLOUDFOUNDRY_ENABLED__": true || process.env.CLOUDFOUNDRY_ENABLED,
-    "__GOOGLE_ENABLED__": true || process.env.GOOGLE_ENABLED,
-    "__AMAZON_ENABLED__": true || process.env.AMAZON_ENABLED,
-    "__TITAN_ENABLED__": true || process.env.TITAN_ENABLED,
   },
   devServer: {
     port: process.env.DECK_PORT || 9000,

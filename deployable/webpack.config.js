@@ -10,9 +10,7 @@ var webpack = require('webpack');
 var definitions = sharedConfig.definitions;
 definitions.__DEFAULT_TIME_ZONE__ = process.env.TIME_ZONE || 'America/Los_Angeles';
 
-
-
-  module.exports = {
+module.exports = {
   debug: sharedConfig.debug,
   devtool: sharedConfig.devtool,
   entry: path.join(__dirname, 'index.js'),
@@ -41,12 +39,7 @@ definitions.__DEFAULT_TIME_ZONE__ = process.env.TIME_ZONE || 'America/Los_Angele
       inject: true,
     }),
     new webpack.DefinePlugin(
-      Object.assign(
-        sharedConfig.definitions,
-        {
-          __DEFAULT_TIME_ZONE__: process.env.TIME_ZONE || 'America/Los_Angeles',
-        }
-      )
+      definitions
     )
   ],
   devServer: {

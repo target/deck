@@ -54,12 +54,7 @@ module.exports = {
       /* filename= */'init.js'
     ),
     new webpack.DefinePlugin(
-      Object.assign(
-        sharedConfig.definitions,
-        {
-          __DEFAULT_TIME_ZONE__: process.env.TIME_ZONE || 'America/Los_Angeles',
-        }
-      )
+      sharedConfig.definitions
     )
   ],
   devServer: {

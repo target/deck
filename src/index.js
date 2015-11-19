@@ -13,31 +13,31 @@ let modulesToInclude = [
 if (__NETFLIX_ENABLED__) {
   modulesToInclude.push(
     require('./netflix')
-  )
+  );
 }
 
 if (__AMAZON_ENABLED__) {
   modulesToInclude.push(
     require('./amazon')
-  )
+  );
 }
 
 if (__GOOGLE_ENABLED__) {
   modulesToInclude.push(
     require('./google')
-  )
+  );
 }
 
 if (__CLOUDFOUNDRY_ENABLED__) {
   modulesToInclude.push(
-    require('./cf')
-  )
+    require('./cloudfoundry')
+  );
 }
 
 if (__TITAN_ENABLED__) {
   modulesToInclude.push(
     require('./titan')
-  )
+  );
 }
 
 module.exports = angular.module('netflix.spinnaker', modulesToInclude)
