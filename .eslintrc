@@ -28,5 +28,10 @@
   },
   "globals": {
     "__DEFAULT_TIME_ZONE__": true,
+    "__NETFLIX_ENABLED__": true,
+    "__CLOUDFOUNDRY_ENABLED__": true,
+    "__GOOGLE_ENABLED__": true,
+    "__AMAZON_ENABLED__": true,
+    "__TITAN_ENABLED__": true,
   }
 }

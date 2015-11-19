@@ -7,8 +7,12 @@ var sharedConfig = require(
   path.join(__dirname, '..', 'webpack.sharedConfig.js')
 );
 var webpack = require('webpack');
+var definitions = sharedConfig.definitions;
+definitions.__DEFAULT_TIME_ZONE__ = process.env.TIME_ZONE || 'America/Los_Angeles';
 
-module.exports = {
+
+
+  module.exports = {
   debug: sharedConfig.debug,
   devtool: sharedConfig.devtool,
   entry: path.join(__dirname, 'index.js'),
@@ -36,9 +40,14 @@ module.exports = {
       favicon: path.join(__dirname, 'favicon.ico'),
       inject: true,
     }),
-    new webpack.DefinePlugin({
-      __DEFAULT_TIME_ZONE__: process.env.TIME_ZONE || 'America/Los_Angeles',
-    }),
+    new webpack.DefinePlugin(
+      Object.assign(
+        sharedConfig.definitions,
+        {
+          __DEFAULT_TIME_ZONE__: process.env.TIME_ZONE || 'America/Los_Angeles',
+        }
+      )
+    )
   ],
   devServer: {
     port: process.env.DECK_PORT || 9000,

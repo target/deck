@@ -53,9 +53,14 @@ module.exports = {
     new CommonsChunkPlugin(
       /* filename= */'init.js'
     ),
-    new webpack.DefinePlugin({
-      __DEFAULT_TIME_ZONE__: process.env.TIME_ZONE || 'America/Los_Angeles',
-    })
+    new webpack.DefinePlugin(
+      Object.assign(
+        sharedConfig.definitions,
+        {
+          __DEFAULT_TIME_ZONE__: process.env.TIME_ZONE || 'America/Los_Angeles',
+        }
+      )
+    )
   ],
   devServer: {
     port: process.env.DECK_PORT || 9000,

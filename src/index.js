@@ -4,16 +4,43 @@
 // try to use its jqLite implementation.
 global.$ = global.jQuery = require('jquery');
 
-let angular = require('angular');
+const angular = require('angular');
 
-module.exports = angular.module('netflix.spinnaker', [
-  require('./netflix'),
+let modulesToInclude = [
   require('./core'),
-  require('./amazon'),
-  require('./google'),
-  require('./cloudfoundry'),
-  require('./titan')
-])
+];
+
+if (__NETFLIX_ENABLED__) {
+  modulesToInclude.push(
+    require('./netflix')
+  )
+}
+
+if (__AMAZON_ENABLED__) {
+  modulesToInclude.push(
+    require('./amazon')
+  )
+}
+
+if (__GOOGLE_ENABLED__) {
+  modulesToInclude.push(
+    require('./google')
+  )
+}
+
+if (__CLOUDFOUNDRY_ENABLED__) {
+  modulesToInclude.push(
+    require('./cf')
+  )
+}
+
+if (__TITAN_ENABLED__) {
+  modulesToInclude.push(
+    require('./titan')
+  )
+}
+
+module.exports = angular.module('netflix.spinnaker', modulesToInclude)
 .config(function(defaultTimeZoneProvider) {
   defaultTimeZoneProvider.set(__DEFAULT_TIME_ZONE__);
 });
