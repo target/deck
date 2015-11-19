@@ -12,13 +12,27 @@ module.exports = {
   debug: sharedConfig.debug,
   devtool: sharedConfig.devtool,
   entry: {
-    app: './index.js',
+    app: path.join(__dirname, 'index.js'),
   },
   output: {
     path: path.join(__dirname, 'build', 'webpack', process.env.SPINNAKER_ENV || ''),
     filename: '[name].js',
 
   },
+  externals: [{
+    'angular': {
+      root: 'angular',
+      amd: 'angular',
+      commonjs2: 'angular',
+      commonjs: 'angular',
+    },
+    'jquery': {
+      root: 'jquery',
+      amd: 'jquery',
+      commonjs2: 'jquery',
+      commonjs: 'jquery',
+    }
+  }],
   module: sharedConfig.module,
   resolve: {
     root: [
@@ -38,12 +52,6 @@ module.exports = {
     new CommonsChunkPlugin(
       /* filename= */'init.js'
     ),
-    new HtmlWebpackPlugin({
-      title: 'Spinnaker',
-      template: './app/index.html',
-      favicon: 'app/favicon.ico',
-      inject: true,
-    }),
     new webpack.DefinePlugin({
       __DEFAULT_TIME_ZONE__: process.env.TIME_ZONE || 'America/Los_Angeles',
     })
