@@ -7,6 +7,9 @@ var webpack = require('webpack');
 var sharedConfig = require(
   path.join(__dirname, '..', 'webpack.sharedConfig.js')
 );
+var definitions = sharedConfig.sharedDefinitions;
+definitions.__DEFAULT_TIME_ZONE__ = process.env.TIME_ZONE || 'America/Los_Angeles';
+var alias = sharedConfig.sharedAliases;
 
 module.exports = {
   debug: sharedConfig.debug,
@@ -39,12 +42,7 @@ module.exports = {
       sharedConfig.nodeModulesPath,
       sharedConfig.bowerComponentsPath,
     ],
-    alias: {
-      'core': path.join(__dirname, 'core'),
-      //lodash: 'utils/lodash.js'
-      //angular: 'imports?window={}!exports?window.angular!angular/angular.js',
-      //uiselect: 'angular-ui-select/dist/select.js'
-    }
+    alias: alias,
   },
   resolveLoader: {
     root: sharedConfig.nodeModulesPath,
@@ -53,9 +51,7 @@ module.exports = {
     new CommonsChunkPlugin(
       /* filename= */'init.js'
     ),
-    new webpack.DefinePlugin(
-      sharedConfig.definitions
-    )
+    new webpack.DefinePlugin(definitions),
   ],
   devServer: {
     port: process.env.DECK_PORT || 9000,

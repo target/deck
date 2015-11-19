@@ -27,6 +27,7 @@
     "jasmine": true,
   },
   "globals": {
+    "__GATE_HOST__": true,
     "__DEFAULT_TIME_ZONE__": true,
     "__NETFLIX_ENABLED__": true,
     "__CLOUDFOUNDRY_ENABLED__": true,

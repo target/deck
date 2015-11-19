@@ -3,6 +3,16 @@ var path = require('path');
 module.exports = {
   nodeModulesPath: path.join(__dirname, 'node_modules'),
   bowerComponentsPath: path.join(__dirname, 'bower_modules'),
+  sharedDefinitions: {
+    "__NETFLIX_ENABLED__": true || process.env.NETFLIX_ENABLED,
+    "__CLOUDFOUNDRY_ENABLED__": true || process.env.CLOUDFOUNDRY_ENABLED,
+    "__GOOGLE_ENABLED__": true || process.env.GOOGLE_ENABLED,
+    "__AMAZON_ENABLED__": true || process.env.AMAZON_ENABLED,
+    "__TITAN_ENABLED__": true || process.env.TITAN_ENABLED,
+  },
+  sharedAliases: {
+    'core': path.join(__dirname, 'src', 'core'),
+  },
   debug: true,
   devtool: 'eval',
   module: {

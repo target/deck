@@ -7,8 +7,10 @@ var sharedConfig = require(
   path.join(__dirname, '..', 'webpack.sharedConfig.js')
 );
 var webpack = require('webpack');
-var definitions = sharedConfig.definitions;
+var definitions = sharedConfig.sharedDefinitions;
 definitions.__DEFAULT_TIME_ZONE__ = process.env.TIME_ZONE || 'America/Los_Angeles';
+var alias = sharedConfig.sharedAliases;
+alias['src'] = path.join(__dirname, '..', 'src');
 
 module.exports = {
   debug: sharedConfig.debug,
@@ -24,9 +26,7 @@ module.exports = {
       sharedConfig.nodeModulesPath,
       sharedConfig.bowerComponentsPath,
     ],
-    alias: {
-      'core': path.join(__dirname, '..', 'src'),
-    }
+    alias: alias,
   },
   resolveLoader: {
     root: sharedConfig.nodeModulesPath,
@@ -38,9 +38,7 @@ module.exports = {
       favicon: path.join(__dirname, 'favicon.ico'),
       inject: true,
     }),
-    new webpack.DefinePlugin(
-      definitions
-    )
+    new webpack.DefinePlugin(definitions),
   ],
   devServer: {
     port: process.env.DECK_PORT || 9000,
