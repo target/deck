@@ -40,6 +40,7 @@ module.exports = {
       sharedConfig.bowerComponentsPath,
     ],
     alias: {
+      'core': path.join(__dirname, 'core'),
       //lodash: 'utils/lodash.js'
       //angular: 'imports?window={}!exports?window.angular!angular/angular.js',
       //uiselect: 'angular-ui-select/dist/select.js'

@@ -12,48 +12,45 @@ module.exports = angular.module('spinnaker.core.config.apiHost', [
     this.authEnabled = false;
     this.pollSchedule = 30000;
 
-    this.$get = function() {
-      var that = this;
-      return {
-        setHost(h) {
-          that.host = h;
-        },
-        setAuthEndpoint(endpoint) {
-          that.authEndpoint = endpoint;
-        },
-        useHttps(value) {
-          that.useHttps = value;
-        },
-        host() {
-          return that.host;
-        },
-        authEndpoint() {
-          if (that.authEndpoint === null) {
-            throw ("Authentication endpoint has not been set. Set with apiHostProvider#setAuthEndpoint");
-          }
-          return that.authEndpoint;
-        },
-        baseUrl() {
-          if (that.host === null) {
-            throw ("API host has not been set. Set with apiHostProvider#setHost");
-          }
-          return useHttps ? `https://${ that.host }` : `http://${ that.host }`;
-        },
-        authEnabled() {
-          return that.authEnabled;
-        },
-        enableAuth() {
-          that.authEnabled = true;
-        },
-        disableAuth() {
-          that.authEnabled = false;
-        },
-        setPollSechedule(pollScheduleInMillis) {
-          that.pollSchedule = pollScheduleInMillis;
-        },
-        getPollSchedule() {
-          return that.pollSchedule;
+    this.$get = () => ({
+      setHost(h) {
+        this.host = h;
+      },
+      setAuthEndpoint(endpoint) {
+        this.authEndpoint = endpoint;
+      },
+      useHttps(value) {
+        this.useHttps = value;
+      },
+      host() {
+        return this.host;
+      },
+      authEndpoint() {
+        if (this.authEndpoint === null) {
+          throw ("Authentication endpoint has not been set. Set with apiHostProvider#setAuthEndpoint");
         }
-      };
-    };
+        return this.authEndpoint;
+      },
+      baseUrl() {
+        if (this.host === null) {
+          throw ("API host has not been set. Set with apiHostProvider#setHost");
+        }
+        return this.useHttps ? `https://${ this.host }` : `http://${ this.host }`;
+      },
+      authEnabled() {
+        return this.authEnabled;
+      },
+      enableAuth() {
+        this.authEnabled = true;
+      },
+      disableAuth() {
+        this.authEnabled = false;
+      },
+      setPollSechedule(pollScheduleInMillis) {
+        this.pollSchedule = pollScheduleInMillis;
+      },
+      getPollSchedule() {
+        return this.pollSchedule;
+      }
+    });
   });

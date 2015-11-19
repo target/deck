@@ -4,9 +4,6 @@ let angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.pipeline.stage.resizeAsg.aws.executionDetails.controller', [
   require('core'),
-  require('angular-ui-router'),
-  require('../../../../../delivery/details/executionDetailsSection.service.js'),
-  require('../../../../../delivery/details/executionDetailsSectionNav.directive.js'),
 ])
   .controller('awsResizeAsgExecutionDetailsCtrl', function ($scope, $stateParams, executionDetailsSectionService) {
 

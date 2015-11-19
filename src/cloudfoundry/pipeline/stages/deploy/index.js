@@ -13,7 +13,8 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.cf.deploy', [
             cloudProvider: 'cf',
             key: 'linearDeploy_cf',
             templateUrl: require('./deployStage.html'),
-            executionDetailsUrl: require('../deployExecutionDetails.html'),
+            // TODO: avoid deep-linking into core templates by creating a directive wrapper
+            executionDetailsUrl: require('core/pipeline/config/stages/deploy/deployExecutionDetails.html'),
             controller: 'DeployCloudFoundryStageCtrl',
             controllerAs: 'deployCloudFoundryStageCtrl',
             defaultTimeoutMs: 60 * 60 * 1000, // 60 minutes
