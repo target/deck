@@ -4,6 +4,7 @@ let angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.pipeline.stage.aws.bakeStage', [
   require('core'),
+  require('./bakeExecutionDetails.controller.js'),
 ])
   .config(function(pipelineConfigProvider) {
     pipelineConfigProvider.registerStage({

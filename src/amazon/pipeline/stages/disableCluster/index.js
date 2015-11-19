@@ -2,29 +2,24 @@
 
 let angular = require('angular');
 
-module.exports = angular.module('spinnaker.core.pipeline.stage.aws.destroyAsgStage', [
+module.exports = angular.module('spinnaker.core.pipeline.stage.aws.disableClusterStage', [
   require('core'),
+  require('./disableClusterExecutionDetails.controller.js'),
 ])
   .config(function(pipelineConfigProvider) {
     pipelineConfigProvider.registerStage({
-      provides: 'destroyServerGroup',
-      alias: 'destroyAsg',
+      provides: 'disableCluster',
       cloudProvider: 'aws',
-      templateUrl: require('./destroyAsgStage.html'),
-      executionDetailsUrl: require('./destroyAsgExecutionDetails.html'),
-      executionStepLabelUrl: require('./destroyAsgStepLabel.html'),
+      templateUrl: require('./disableClusterStage.html'),
+      executionDetailsUrl: require('./disableClusterExecutionDetails.html'),
       validators: [
-        {
-          type: 'targetImpedance',
-          message: 'This pipeline will attempt to destroy a server group without deploying a new version into the same cluster.'
-        },
         { type: 'requiredField', fieldName: 'cluster' },
-        { type: 'requiredField', fieldName: 'target', },
+        { type: 'requiredField', fieldName: 'remainingEnabledServerGroups', fieldLabel: 'Keep [X] enabled Server Groups'},
         { type: 'requiredField', fieldName: 'regions', },
         { type: 'requiredField', fieldName: 'credentials', fieldLabel: 'account'},
       ],
     });
-  }).controller('awsDestroyAsgStageCtrl', function($scope, accountService, stageConstants, _) {
+  }).controller('awsDisableClusterStageCtrl', function($scope, accountService, stageConstants, _) {
     var ctrl = this;
 
     let stage = $scope.stage;
@@ -48,10 +43,12 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.aws.destroyAsgSta
       });
     };
 
-    $scope.targets = stageConstants.targetList;
-
     stage.regions = stage.regions || [];
     stage.cloudProvider = 'aws';
+
+    if (stage.isNew && $scope.application.attributes.platformHealthOnly) {
+      stage.interestingHealthProviderNames = ['Amazon'];
+    }
 
     if (!stage.credentials && $scope.application.defaultCredentials.aws) {
       stage.credentials = $scope.application.defaultCredentials.aws;
@@ -63,9 +60,21 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.aws.destroyAsgSta
     if (stage.credentials) {
       ctrl.accountUpdated();
     }
-    if (!stage.target) {
-      stage.target = $scope.targets[0].val;
+
+    if (stage.remainingEnabledServerGroups === undefined) {
+      stage.remainingEnabledServerGroups = 1;
     }
 
+    ctrl.pluralize = function(str, val) {
+      if (val === 1) {
+        return str;
+      }
+      return str + 's';
+    };
+
+    if (stage.preferLargerOverNewer === undefined) {
+      stage.preferLargerOverNewer = "false";
+    }
+    stage.preferLargerOverNewer = stage.preferLargerOverNewer.toString();
   });
 

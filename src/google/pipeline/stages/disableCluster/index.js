@@ -3,8 +3,8 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.pipeline.stage.gce.disableClusterStage', [
-  require('./disableClusterExecutionDetails.controller.js'),
   require('core'),
+    require('./disableClusterExecutionDetails.controller.js'),
 ])
   .config(function(pipelineConfigProvider) {
     pipelineConfigProvider.registerStage({

@@ -4,6 +4,7 @@ let angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.pipeline.stage.gce.destroyAsgStage', [
   require('core'),
+  require('./destroyAsgExecutionDetails.controller.js'),
 ])
   .config(function(pipelineConfigProvider) {
     pipelineConfigProvider.registerStage({

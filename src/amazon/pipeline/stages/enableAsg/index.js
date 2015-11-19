@@ -2,23 +2,26 @@
 
 let angular = require('angular');
 
-module.exports = angular.module('spinnaker.core.pipeline.stage.aws.disableClusterStage', [
+module.exports = angular.module('spinnaker.core.pipeline.stage.aws.enableAsgStage', [
   require('core'),
+  require('./enableAsgExecutionDetails.controller.js'),
 ])
   .config(function(pipelineConfigProvider) {
     pipelineConfigProvider.registerStage({
-      provides: 'disableCluster',
+      provides: 'enableServerGroup',
+      alias: 'enableAsg',
       cloudProvider: 'aws',
-      templateUrl: require('./disableClusterStage.html'),
-      executionDetailsUrl: require('./disableClusterExecutionDetails.html'),
+      templateUrl: require('./enableAsgStage.html'),
+      executionDetailsUrl: require('./enableAsgExecutionDetails.html'),
+      executionStepLabelUrl: require('./enableAsgStepLabel.html'),
       validators: [
         { type: 'requiredField', fieldName: 'cluster' },
-        { type: 'requiredField', fieldName: 'remainingEnabledServerGroups', fieldLabel: 'Keep [X] enabled Server Groups'},
+        { type: 'requiredField', fieldName: 'target', },
         { type: 'requiredField', fieldName: 'regions', },
         { type: 'requiredField', fieldName: 'credentials', fieldLabel: 'account'},
       ],
     });
-  }).controller('awsDisableClusterStageCtrl', function($scope, accountService, stageConstants, _) {
+  }).controller('awsEnableAsgStageCtrl', function($scope, accountService, stageConstants, _) {
     var ctrl = this;
 
     let stage = $scope.stage;
@@ -42,6 +45,8 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.aws.disableCluste
       });
     };
 
+    $scope.targets = stageConstants.targetList;
+
     stage.regions = stage.regions || [];
     stage.cloudProvider = 'aws';
 
@@ -59,21 +64,10 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.aws.disableCluste
     if (stage.credentials) {
       ctrl.accountUpdated();
     }
-
-    if (stage.remainingEnabledServerGroups === undefined) {
-      stage.remainingEnabledServerGroups = 1;
+    if (!stage.target) {
+      stage.target = $scope.targets[0].val;
     }
 
-    ctrl.pluralize = function(str, val) {
-      if (val === 1) {
-        return str;
-      }
-      return str + 's';
-    };
-
-    if (stage.preferLargerOverNewer === undefined) {
-      stage.preferLargerOverNewer = "false";
-    }
-    stage.preferLargerOverNewer = stage.preferLargerOverNewer.toString();
+    $scope.$watch('stage.credentials', $scope.accountUpdated);
   });
 

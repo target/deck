@@ -2,25 +2,25 @@
 
 let angular = require('angular');
 
-module.exports = angular.module('spinnaker.core.pipeline.stage.aws.enableAsgStage', [
+module.exports = angular.module('spinnaker.core.pipeline.stage.aws.scaleDownClusterStage', [
   require('core'),
+  require('./scaleDownClusterExecutionDetails.controller.js'),
 ])
   .config(function(pipelineConfigProvider) {
     pipelineConfigProvider.registerStage({
-      provides: 'enableServerGroup',
-      alias: 'enableAsg',
+      provides: 'scaleDownCluster',
       cloudProvider: 'aws',
-      templateUrl: require('./enableAsgStage.html'),
-      executionDetailsUrl: require('./enableAsgExecutionDetails.html'),
-      executionStepLabelUrl: require('./enableAsgStepLabel.html'),
+      templateUrl: require('./scaleDownClusterStage.html'),
+      executionDetailsUrl: require('./scaleDownClusterExecutionDetails.html'),
       validators: [
         { type: 'requiredField', fieldName: 'cluster' },
-        { type: 'requiredField', fieldName: 'target', },
+        { type: 'requiredField', fieldName: 'remainingFullSizeServerGroups', fieldLabel: 'Keep [X] full size Server Groups'},
         { type: 'requiredField', fieldName: 'regions', },
         { type: 'requiredField', fieldName: 'credentials', fieldLabel: 'account'},
       ],
+      strategy: true,
     });
-  }).controller('awsEnableAsgStageCtrl', function($scope, accountService, stageConstants, _) {
+  }).controller('awsScaleDownClusterStageCtrl', function($scope, accountService, stageConstants, _) {
     var ctrl = this;
 
     let stage = $scope.stage;
@@ -44,14 +44,8 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.aws.enableAsgStag
       });
     };
 
-    $scope.targets = stageConstants.targetList;
-
     stage.regions = stage.regions || [];
     stage.cloudProvider = 'aws';
-
-    if (stage.isNew && $scope.application.attributes.platformHealthOnly) {
-      stage.interestingHealthProviderNames = ['Amazon'];
-    }
 
     if (!stage.credentials && $scope.application.defaultCredentials.aws) {
       stage.credentials = $scope.application.defaultCredentials.aws;
@@ -63,10 +57,25 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.aws.enableAsgStag
     if (stage.credentials) {
       ctrl.accountUpdated();
     }
-    if (!stage.target) {
-      stage.target = $scope.targets[0].val;
+
+    if (stage.remainingFullSizeServerGroups === undefined) {
+      stage.remainingFullSizeServerGroups = 1;
     }
 
-    $scope.$watch('stage.credentials', $scope.accountUpdated);
+    if (stage.allowScaleDownActive === undefined) {
+      stage.allowScaleDownActive = false;
+    }
+
+    ctrl.pluralize = function(str, val) {
+      if (val === 1) {
+        return str;
+      }
+      return str + 's';
+    };
+
+    if (stage.preferLargerOverNewer === undefined) {
+      stage.preferLargerOverNewer = "false";
+    }
+    stage.preferLargerOverNewer = stage.preferLargerOverNewer.toString();
   });
 

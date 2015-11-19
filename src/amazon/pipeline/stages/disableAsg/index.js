@@ -2,13 +2,15 @@
 
 let angular = require('angular');
 
-module.exports = angular.module('spinnaker.core.pipeline.stage.gce.disableAsgStage', [
+module.exports = angular.module('spinnaker.core.pipeline.stage.aws.disableAsgStage', [
   require('core'),
+  require('./disableAsgExecutionDetails.controller.js'),
 ])
   .config(function(pipelineConfigProvider) {
     pipelineConfigProvider.registerStage({
       provides: 'disableServerGroup',
-      cloudProvider: 'gce',
+      alias: 'disableAsg',
+      cloudProvider: 'aws',
       templateUrl: require('./disableAsgStage.html'),
       executionDetailsUrl: require('./disableAsgExecutionDetails.html'),
       executionStepLabelUrl: require('./disableAsgStepLabel.html'),
@@ -19,48 +21,48 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.gce.disableAsgSta
         },
         { type: 'requiredField', fieldName: 'cluster' },
         { type: 'requiredField', fieldName: 'target', },
-        { type: 'requiredField', fieldName: 'zones', },
+        { type: 'requiredField', fieldName: 'regions', },
         { type: 'requiredField', fieldName: 'credentials', fieldLabel: 'account'},
       ],
     });
-  }).controller('gceDisableAsgStageCtrl', function($scope, accountService, stageConstants, _) {
+  }).controller('awsDisableAsgStageCtrl', function($scope, accountService, stageConstants, _) {
     var ctrl = this;
 
     let stage = $scope.stage;
 
     $scope.state = {
       accounts: false,
-      zonesLoaded: false
+      regionsLoaded: false
     };
 
-    accountService.listAccounts('gce').then(function (accounts) {
+    accountService.listAccounts('aws').then(function (accounts) {
       $scope.accounts = accounts;
       $scope.state.accounts = true;
     });
 
-    $scope.zones = {"us-central1": ['us-central1-a', 'us-central1-b', 'us-central1-c']};
+    $scope.regions = ['us-east-1', 'us-west-1', 'eu-west-1', 'us-west-2'];
 
     ctrl.accountUpdated = function() {
-      accountService.getRegionsForAccount(stage.credentials).then(function(zoneMap) {
-        $scope.zones = zoneMap;
-        $scope.zonesLoaded = true;
+      accountService.getRegionsForAccount(stage.credentials).then(function(regions) {
+        $scope.regions = _.map(regions, function(v) { return v.name; });
+        $scope.state.regionsLoaded = true;
       });
     };
 
     $scope.targets = stageConstants.targetList;
 
-    stage.zones = stage.zones || [];
-    stage.cloudProvider = 'gce';
+    stage.regions = stage.regions || [];
+    stage.cloudProvider = 'aws';
 
     if (stage.isNew && $scope.application.attributes.platformHealthOnly) {
-      stage.interestingHealthProviderNames = ['Google'];
+      stage.interestingHealthProviderNames = ['Amazon'];
     }
 
-    if (!stage.credentials && $scope.application.defaultCredentials.gce) {
-      stage.credentials = $scope.application.defaultCredentials.gce;
+    if (!stage.credentials && $scope.application.defaultCredentials.aws) {
+      stage.credentials = $scope.application.defaultCredentials.aws;
     }
-    if (!stage.zones.length && $scope.application.defaultRegions.gce) {
-      stage.zones.push($scope.application.defaultRegions.gce);
+    if (!stage.regions.length && $scope.application.defaultRegions.aws) {
+      stage.regions.push($scope.application.defaultRegion.aws);
     }
 
     if (stage.credentials) {
