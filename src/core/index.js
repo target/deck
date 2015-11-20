@@ -164,8 +164,8 @@ module.exports = angular
     $modalProvider.options.keyboard = false;
   })
   .config(function(RestangularProvider, apiHostProvider ) {
-    RestangularProvider.setBaseUrl(apiHostProvider.baseUrl());
-    RestangularProvider.setDefaultHttpFields({timeout: apiHostProvider.getPollSchedule() * 2 + 5000}); // TODO: replace with apiHost call
+    RestangularProvider.setBaseUrl(apiHostProvider.baseUrl);
+    RestangularProvider.setDefaultHttpFields({timeout: apiHostProvider.pollSchedule * 2 + 5000});
   })
   .config(function($httpProvider){
     $httpProvider.defaults.headers.patch = {

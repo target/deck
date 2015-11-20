@@ -3,7 +3,7 @@
 const angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.config.apiHost', [
-  require('exports?"restangular"!imports?_=lodash!restangular'),
+    require('exports?"restangular"!imports?_=lodash!restangular'),
 ])
   .provider('apiHost', function() {
     this.host = null;
@@ -11,6 +11,14 @@ module.exports = angular.module('spinnaker.core.config.apiHost', [
     this.useHttps = true;
     this.authEnabled = false;
     this.pollSchedule = 30000;
+
+    this.baseUrl = () => {
+      if (this.host === null) {
+        throw ("API host has not been set. Set with apiHostProvider#setHost");
+      }
+      return this.useHttps ? `https://${ this.host }` : `http://${ this.host }`;
+
+    };
 
     this.$get = () => ({
       setHost(h) {
@@ -31,12 +39,7 @@ module.exports = angular.module('spinnaker.core.config.apiHost', [
         }
         return this.authEndpoint;
       },
-      baseUrl() {
-        if (this.host === null) {
-          throw ("API host has not been set. Set with apiHostProvider#setHost");
-        }
-        return this.useHttps ? `https://${ this.host }` : `http://${ this.host }`;
-      },
+      baseUrl: this.baseUrl,
       authEnabled() {
         return this.authEnabled;
       },

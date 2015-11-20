@@ -7,5 +7,4 @@ module.exports = angular
     require('./pipeline'),
     require('./serverGroup'),
     require('./migrator.service.js'),
-  ])
-  .name;
+  ]);
