@@ -8,7 +8,7 @@ var sharedConfig = require(
 );
 var webpack = require('webpack');
 var definitions = sharedConfig.sharedDefinitions;
-definitions.__DEFAULT_TIME_ZONE__ = process.env.TIME_ZONE || 'America/Los_Angeles';
+definitions.__DEFAULT_TIME_ZONE__ = process.env.TIME_ZONE || "'America/Los_Angeles'";
 var alias = sharedConfig.sharedAliases;
 alias['src'] = path.join(__dirname, '..', 'src');
 
