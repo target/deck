@@ -4,7 +4,6 @@
 let angular = require('angular');
 
 module.exports = angular
-  .module('spinnaker.netflix.migratior.pipeline', [
+  .module('spinnaker.netflix.migrator.pipeline', [
     require('./pipeline.migrator.directive')
-  ])
-  .name;
+  ]);

@@ -13,8 +13,8 @@ module.exports = {
   sharedAliases: {
     'core': path.join(__dirname, 'src', 'core'),
   },
-  debug: true,
-  devtool: 'eval',
+  //debug: true,
+  //devtool: 'eval',
   module: {
     loaders: [
       {

@@ -7,5 +7,4 @@ module.exports = angular
     require('./diff'),
     require('./networking'),
     require('./serverGroupCommandConfigurer.service.js'),
-  ])
-  .name;
+  ]);

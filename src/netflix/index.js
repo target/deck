@@ -16,5 +16,4 @@ module.exports = angular
     require('./serverGroup'),
     require('./templateOverride'),
     require('./whatsNew'),
-  ])
-  .name;
+  ]);

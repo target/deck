@@ -40,8 +40,11 @@ if (__TITAN_ENABLED__) {
   );
 }
 
+// TODO: angular loader doesn't recognize this as a module definition b/c modulesToInclude is not an ArrayExpression
+// manually appending .name for now
 module.exports = angular.module('netflix.spinnaker', modulesToInclude)
 .config(function(defaultTimeZoneProvider) {
   defaultTimeZoneProvider.set(__DEFAULT_TIME_ZONE__);
-});
+})
+.name;
 
