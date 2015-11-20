@@ -3,7 +3,7 @@
 const angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.config.apiHost', [
-  require('restangular'),
+  require('exports?"restangular"!imports?_=lodash!restangular'),
 ])
   .provider('apiHost', function() {
     this.host = null;
