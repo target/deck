@@ -1,6 +1,7 @@
 'use strict';
 
 let angular = require('angular');
+
 require('./serverGroupAdvancedSettingsDirective.html');
 
 describe('Directive: GCE Group Advanced Settings Selector', function() {

@@ -20,6 +20,7 @@
 
 describe('Service: Pond - task complete, task force refresh', function() {
   const TasksFixture = require('./tasks.fixture.js');
+  const angular = require('angular');
 
   var application = 'deck';
   var service, $http, scope, timeout, task, lodash;

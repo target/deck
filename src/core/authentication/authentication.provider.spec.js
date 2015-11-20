@@ -1,5 +1,7 @@
 'use strict';
 
+let angular = require('angular');
+
 describe('authenticationProvider: application startup', function() {
 
   beforeEach(

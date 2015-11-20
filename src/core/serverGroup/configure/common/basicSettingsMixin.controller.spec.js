@@ -2,6 +2,7 @@
 
 describe('Basic Settings Mixin Controller:', function () {
   var controller, $scope;
+  const angular = require('angular');
 
   beforeEach(
     window.module(
@@ -13,7 +14,7 @@ describe('Basic Settings Mixin Controller:', function () {
     $scope = $rootScope.$new();
     $scope.application = { name: 'app', serverGroups: [] };
     $scope.command = { viewState: { }};
-    controller = $controller('BasicSettingsMixin',{
+    controller = $controller('BasicSettingsMixin', {
       $scope: $scope,
       RxService: RxService,
       namingService: namingService,

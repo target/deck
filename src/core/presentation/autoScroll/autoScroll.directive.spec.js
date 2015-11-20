@@ -18,6 +18,8 @@
 
 describe('Directives: auto-scroll', function () {
 
+  const angular = require('angular');
+
   beforeEach(window.module(
     require('./autoScroll.directive.js')
   ));
