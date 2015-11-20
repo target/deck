@@ -1,12 +1,12 @@
 'use strict';
 
+
 describe('Controller: deploymentStrategySelector', function() {
 
 
   beforeEach(
     window.module(
-      require('./deploymentStrategySelector.controller.js'),
-      require('../utils/lodash.js')
+      require('./deploymentStrategySelector.controller.js')
     )
   );
 
@@ -36,6 +36,8 @@ describe('Controller: deploymentStrategySelector', function() {
     this.strategies = strategies;
 
     this.initializeController = function(command) {
+
+
       this.$scope = $rootScope.$new();
       this.$scope.command = command;
       this.deploymentStrategyService = deploymentStrategyService;

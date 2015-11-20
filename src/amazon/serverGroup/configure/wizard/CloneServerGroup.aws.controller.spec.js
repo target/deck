@@ -5,6 +5,9 @@
  ServerGroupConfigurationService is not mocked out to verify behavior that existed before it was refactored into
  existence.
  */
+
+const angular = require('angular');
+
 describe('Controller: awsCloneServerGroup', function () {
   const AccountServiceFixture = require('../../../../../test/fixture/AccountServiceFixtures.js');
   const securityGroupReaderFixture = require('../../../../../test/fixture/SecurityGroupServiceFixtures.js');
@@ -307,7 +310,7 @@ describe('Controller: awsCloneServerGroup', function () {
 
     it('returns only the existing ami without further querying when package name is less than three characters', function() {
       var $scope = this.$scope,
-          amiBasedImage = {attributes: {virtualizationType: 'hvm'},imageName: 'aa-packagebase-something-something', amis: {'us-east-1': ['ami-1234']}},
+          amiBasedImage = {attributes: {virtualizationType: 'hvm'}, imageName: 'aa-packagebase-something-something', amis: {'us-east-1': ['ami-1234']}},
           serverGroup = this.buildBaseClone();
 
       serverGroup.viewState.imageId = 'ami-1234';

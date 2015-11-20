@@ -3,7 +3,7 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.aws.instance.details.scalingPolicy.directive', [
-    require('core'),
+    require('../../../../core'),
   ])
   .directive('scalingPolicy', function(InsightFilterStateModel) {
     return {

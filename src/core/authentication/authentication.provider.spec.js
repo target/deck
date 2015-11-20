@@ -9,7 +9,17 @@ describe('authenticationProvider: application startup', function() {
   );
 
   afterEach(function() {
-    this.apiHost.disableAuth()
+    this.apiHost.disableAuth();
+  });
+
+  beforeEach(() => {
+    angular
+      .module('mockApp', [])
+      .config((apiHostProvider) => {
+        apiHostProvider.enableAuth();
+      });
+
+    window.module('mockApp');
   });
 
   beforeEach(window.inject(function(authenticationService, $timeout, $httpBackend, apiHost, redirectService, $window, $location, $rootScope) {

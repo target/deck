@@ -1,5 +1,7 @@
 'use strict';
 
+const angular = require('angular');
+
 describe('Controller: awsCreateLoadBalancerCtrl', function () {
 
   // load the controller's module

@@ -15,10 +15,10 @@ describe('Service: clusterFilterService', function () {
   beforeEach(
     window.module(
       require('./clusterFilter.service.js'),
-      require('./clusterFilter.model.js'),
-      require('../../../../test/mock/mockApplicationData.js')
+      require('../../../mockApplicationData.js')
     )
   );
+
 
   beforeEach(
     window.inject(

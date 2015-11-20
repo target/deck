@@ -6,54 +6,57 @@ module.exports = angular.module('spinnaker.core.config.apiHost', [
     require('exports?"restangular"!imports?_=lodash!restangular'),
 ])
   .provider('apiHost', function() {
-    this.host = null;
-    this.authEndpoint = null;
-    this.useHttps = true;
-    this.authEnabled = false;
-    this.pollSchedule = 30000;
 
-    this.baseUrl = () => {
-      if (this.host === null) {
-        throw ("API host has not been set. Set with apiHostProvider#setHost");
+    let host = null;
+    let authEndpoint = null;
+    let useHttps = true;
+    let authEnabled = false;
+    let pollSchedule = 30000;
+
+    return {
+      setHost: (hostName) => {
+        host = hostName;
+      },
+      setAuthEndpoint: (endpoint) => {
+        authEndpoint = endpoint;
+      },
+      useHttps: (bool) => {
+        useHttps = bool;
+      },
+      setPollSchedule: (durationInMillis) => {
+        pollSchedule = durationInMillis;
+      },
+      disableAuth: () => {
+        authEnabled = false;
+      },
+      enableAuth: () => {
+        authEnabled = true;
+      },
+
+
+      $get: function() {
+        return {
+          host: () => {
+            return host;
+          },
+          authEndpoint: () => {
+            return authEndpoint;
+          },
+          authEnabled: () => {
+            return authEnabled;
+          },
+          getPollSchedule: () => {
+            return pollSchedule;
+          },
+          baseUrl: () => {
+            if (host === null) {
+              throw ("API host has not been set. Set with apiHostProvider#setHost");
+            }
+            return useHttps ? `https://${ host }` : `http://${ host }`;
+          }
+
+        };
       }
-      return this.useHttps ? `https://${ this.host }` : `http://${ this.host }`;
-
     };
 
-    this.$get = () => ({
-      setHost(h) {
-        this.host = h;
-      },
-      setAuthEndpoint(endpoint) {
-        this.authEndpoint = endpoint;
-      },
-      useHttps(value) {
-        this.useHttps = value;
-      },
-      host() {
-        return this.host;
-      },
-      authEndpoint() {
-        if (this.authEndpoint === null) {
-          throw ("Authentication endpoint has not been set. Set with apiHostProvider#setAuthEndpoint");
-        }
-        return this.authEndpoint;
-      },
-      baseUrl: this.baseUrl,
-      authEnabled() {
-        return this.authEnabled;
-      },
-      enableAuth() {
-        this.authEnabled = true;
-      },
-      disableAuth() {
-        this.authEnabled = false;
-      },
-      setPollSechedule(pollScheduleInMillis) {
-        this.pollSchedule = pollScheduleInMillis;
-      },
-      getPollSchedule() {
-        return this.pollSchedule;
-      }
-    });
   });

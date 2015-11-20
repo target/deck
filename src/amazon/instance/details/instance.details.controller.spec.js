@@ -1,5 +1,6 @@
 'use strict';
 
+const angular = require('angular');
 
 describe('Controller: awsInstanceDetailsCtrl', function () {
 

@@ -1,6 +1,8 @@
 'use strict';
 
+
 describe('Controller: CreateSecurityGroup', function () {
+
 
   beforeEach(
     window.module(
@@ -15,6 +17,8 @@ describe('Controller: CreateSecurityGroup', function () {
     // Initialize the controller and a mock scope
     beforeEach(window.inject(function ($controller, $rootScope, $q, accountService, securityGroupReader, modalWizardService,
                                 taskMonitorService, securityGroupWriter, vpcReader) {
+
+      const _ = require('../../../core/utils/lodash');
 
       this.$scope = $rootScope.$new();
       this.$q = $q;

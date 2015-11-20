@@ -16,7 +16,7 @@ describe('authenticationInterceptor', function() {
     apiHost = _apiHost_;
     authenticationService = _authenticationService_;
     $rootScope = _$rootScope_;
-    apiHost.setAuthEndpoint('auth.netflix.net');
+    //apiHost.setAuthEndpoint('auth.netflix.net');
   }));
 
   describe('non-intercepted requests', function() {

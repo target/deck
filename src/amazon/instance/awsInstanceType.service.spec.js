@@ -16,7 +16,9 @@
 
 'use strict';
 
+
 describe('Service: InstanceType', function () {
+
 
   beforeEach(function() {
       window.module(
@@ -26,6 +28,8 @@ describe('Service: InstanceType', function () {
 
 
   beforeEach(window.inject(function (_awsInstanceTypeService_, _$httpBackend_, _settings_, infrastructureCaches) {
+
+    const _ = require('../../core/utils/lodash');
 
     this.awsInstanceTypeService = _awsInstanceTypeService_;
     this.$httpBackend = _$httpBackend_;
