@@ -6,7 +6,6 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.manualJudgment.ex
   require('angular-ui-router'),
   require('../../../../delivery/details/executionDetailsSection.service.js'),
   require('../../../../delivery/details/executionDetailsSectionNav.directive.js'),
-  require('../../../../../core/config/apiHost'),
 ])
   .controller('ManualJudgmentExecutionDetailsCtrl', function ($scope, $stateParams, $http, settings, executionDetailsSectionService, apiHost, _) {
     $scope.configSections = ['manualJudgment', 'taskStatus'];

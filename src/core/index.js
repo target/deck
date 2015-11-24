@@ -154,7 +154,7 @@ module.exports = angular
   })
   .config(function(defaultTimeZoneProvider, apiHostProvider, whatsNewProvider) {
     defaultTimeZoneProvider.set(__DEFAULT_TIME_ZONE__);
-    apiHostProvider.setHost(__GATE_HOST__);
+    //apiHostProvider.setHost(__GATE_HOST__);
     whatsNewProvider.setGistId(__WHATS_NEW_GIST_ID__);
     whatsNewProvider.setFileName(__WHATS_NEW_FILE_NAME__);
     whatsNewProvider.setAccessToken(__WHATS_NEW_ACCESS_TOKEN__);
