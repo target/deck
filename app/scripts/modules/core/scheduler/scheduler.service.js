@@ -3,8 +3,8 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.scheduler', [
+  require('config'),
   require('../utils/rx.js'),
-  require('../config/settings.js')
 ])
   .factory('scheduler', function(rx, settings, $q, $log, $window, $timeout) {
     var scheduler = new rx.Subject();
@@ -12,7 +12,7 @@ module.exports = angular.module('spinnaker.core.scheduler', [
     let lastRun = new Date().getTime();
 
     let source = rx.Observable
-      .timer(0, settings.pollSchedule)
+      .timer(0, apiHostConfig.getPollSchedule())
       .pausable(scheduler);
 
     let runner = () => {
@@ -30,10 +30,10 @@ module.exports = angular.module('spinnaker.core.scheduler', [
     let resumeScheduler = () => {
       let now = new Date().getTime();
       $log.debug('auto refresh resumed');
-      if (now - lastRun > settings.pollSchedule) {
+      if (now - lastRun > apiHostConfig.getPollSchedule()) {
         source.resume();
       } else {
-        $timeout(() => source.resume(), settings.pollSchedule - (now - lastRun));
+        $timeout(() => source.resume(), apiHostConfig.getPollSchedule() - (now - lastRun));
       }
     };
 
@@ -49,7 +49,7 @@ module.exports = angular.module('spinnaker.core.scheduler', [
     let scheduleImmediate = () => {
       runner();
       source.pause();
-      $timeout(() => source.resume(), settings.pollSchedule);
+      $timeout(() => source.resume(), apiHostConfig.getPollSchedule());
     };
 
     document.addEventListener('visibilitychange', watchDocumentVisibility);
@@ -75,5 +75,5 @@ module.exports = angular.module('spinnaker.core.scheduler', [
         return deferred.promise;
       },
     };
-  })
-  .name;
+  });
+
