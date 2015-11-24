@@ -37,5 +37,8 @@
     "__GOOGLE_ENABLED__": true,
     "__AMAZON_ENABLED__": true,
     "__TITAN_ENABLED__": true,
+    "__WHATS_NEW_GIST_ID__" : true,
+    "__WHATS_NEW_FILE_NAME__": true,
+    "__WHATS_NEW_ACCESS_TOKEN__" : true,
   }
 }

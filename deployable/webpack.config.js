@@ -8,7 +8,13 @@ var sharedConfig = require(
 );
 var webpack = require('webpack');
 var definitions = sharedConfig.sharedDefinitions;
+
 definitions.__DEFAULT_TIME_ZONE__ = process.env.TIME_ZONE || "'America/Los_Angeles'";
+definitions.__GATE_HOST__ = process.env.GATE_HOST || "'spinnaker-api-prestaging.prod.netflix.net'";
+definitions.__WHATS_NEW_GIST_ID__ = process.env.WHATS_NEW_GIST_ID|| "'32526cd608db3d811b38'";
+definitions.__WHATS_NEW_FILE_NAME__ = process.env.WHATS_NEW_FILE_NAME || "'news.md'";
+definitions.__WHATS_NEW_ACCESS_TOKEN__ = process.env.WHATS_NEW_ACCESS_TOKEN || "''";
+
 var alias = sharedConfig.sharedAliases;
 alias['src'] = path.join(__dirname, '..', 'src');
 

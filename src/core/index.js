@@ -1,6 +1,5 @@
 'use strict';
 
-
 global.Spinner = require('spin.js');
 
 let angular = require('angular');
@@ -147,6 +146,23 @@ module.exports = angular
       '  </div>' +
       '  </div>');
   })
+  .run(() => {
+    console.info('run: core/index.js');
+  })
+  .config(() => {
+    console.info('config: core/index.js');
+  })
+  .config(function(defaultTimeZoneProvider, apiHostProvider, whatsNewProvider) {
+    defaultTimeZoneProvider.set(__DEFAULT_TIME_ZONE__);
+    apiHostProvider.setHost(__GATE_HOST__);
+    whatsNewProvider.setGistId(__WHATS_NEW_GIST_ID__);
+    whatsNewProvider.setFileName(__WHATS_NEW_FILE_NAME__);
+    whatsNewProvider.setAccessToken(__WHATS_NEW_ACCESS_TOKEN__);
+  })
+  .config(function(defaultTimeZoneProvider, apiHostProvider) {
+    defaultTimeZoneProvider.set(__DEFAULT_TIME_ZONE__);
+    apiHostProvider.setHost(__GATE_HOST__);
+  })
   .config(function ($logProvider, statesProvider) {
     statesProvider.setStates();
     $logProvider.debugEnabled(true);
@@ -164,8 +180,8 @@ module.exports = angular
     $modalProvider.options.keyboard = false;
   })
   .config(function(RestangularProvider, apiHostProvider ) {
-    RestangularProvider.setBaseUrl(apiHostProvider.baseUrl);
-    RestangularProvider.setDefaultHttpFields({timeout: apiHostProvider.pollSchedule * 2 + 5000});
+    RestangularProvider.setBaseUrl(apiHostProvider.baseUrl());
+    RestangularProvider.setDefaultHttpFields({timeout: apiHostProvider.getPollSchedule() * 2 + 5000});
   })
   .config(function($httpProvider){
     $httpProvider.defaults.headers.patch = {

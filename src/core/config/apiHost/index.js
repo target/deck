@@ -13,10 +13,19 @@ module.exports = angular.module('spinnaker.core.config.apiHost', [
     let authEnabled = false;
     let pollSchedule = 30000;
 
+    let baseUrlFn = () => {
+      if (host === null) {
+        throw ("API host has not been set. Set with apiHostProvider#setHost");
+      }
+      return useHttps ? `https://${ host }` : `http://${ host }`;
+    };
+
+
     return {
       setHost: (hostName) => {
         host = hostName;
       },
+
       setAuthEndpoint: (endpoint) => {
         authEndpoint = endpoint;
       },
@@ -31,6 +40,10 @@ module.exports = angular.module('spinnaker.core.config.apiHost', [
       },
       enableAuth: () => {
         authEnabled = true;
+      },
+      baseUrl: baseUrlFn,
+      getPollSchedule: () => {
+        return pollSchedule;
       },
 
 
@@ -48,13 +61,7 @@ module.exports = angular.module('spinnaker.core.config.apiHost', [
           getPollSchedule: () => {
             return pollSchedule;
           },
-          baseUrl: () => {
-            if (host === null) {
-              throw ("API host has not been set. Set with apiHostProvider#setHost");
-            }
-            return useHttps ? `https://${ host }` : `http://${ host }`;
-          }
-
+          baseUrl: baseUrlFn
         };
       }
     };

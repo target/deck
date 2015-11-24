@@ -1,9 +1,5 @@
 'use strict';
 
-// deck is reliant on a million jquery features; we need to load it before angular so that angular does not
-// try to use its jqLite implementation.
-global.$ = global.jQuery = require('jquery');
-
 const angular = require('angular');
 
 let modulesToInclude = [
@@ -43,8 +39,12 @@ if (__TITAN_ENABLED__) {
 // TODO: angular loader doesn't recognize this as a module definition b/c modulesToInclude is not an ArrayExpression
 // manually appending .name for now
 module.exports = angular.module('netflix.spinnaker', modulesToInclude)
-.config(function(defaultTimeZoneProvider) {
-  defaultTimeZoneProvider.set(__DEFAULT_TIME_ZONE__);
+.run(() => {
+  console.info('run: src/index.jx');
 })
+.config(() => {
+  console.info('config: src/index.jx');
+})
+
 .name;
 
