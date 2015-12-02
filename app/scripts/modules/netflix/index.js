@@ -28,6 +28,12 @@ module.exports = angular
     require('./serverGroup/networking/networking.module.js'),
     require('./report/reservationReport.directive.js'),
 
+    require('./application/netflixCreateApplicationModal.controller.js'),
+
+    require('./help/netflixHelpContents.registry.js'),
+
+    require('./chaosMonkey/chaosMonkeyConfig.directive.js'),
+
   ])
   .run(function(cloudProviderRegistry, featureFlagConfig) {
     if (featureFlagConfig.get('netflixMode') ) {
