@@ -3,13 +3,12 @@ let angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.delivery.executions.service', [
   require('config'),
-  require('angular-ui-router'),
   require('../../scheduler/scheduler.service.js'),
   require('../../cache/deckCacheFactory.js'),
   require('../../utils/appendTransform.js'),
   require('./executions.transformer.service.js')
 ])
-  .factory('executionService', function($stateParams, $http, $timeout, $q, $log,
+  .factory('executionService', function($http, $timeout, $q, $log,
                                          scheduler, apiHostConfig, appendTransform, executionsTransformer) {
 
     const activeStatuses = ['RUNNING', 'SUSPENDED', 'NOT_STARTED'];
@@ -73,27 +72,47 @@ module.exports = angular.module('spinnaker.core.delivery.executions.service', [
       });
     }
 
-    function cancelExecution(executionId, applicationName) {
+    function waitUntilPipelineIsCancelled(application, executionId) {
+      return getRunningExecutions(application.name).then((executions) => {
+        let match = executions.filter((execution) => execution.id === executionId);
+        let deferred = $q.defer();
+        if (match && !match.length) {
+          application.reloadExecutions().then(deferred.resolve);
+          return deferred.promise;
+        }
+        return $timeout(() => waitUntilPipelineIsCancelled(application, executionId), 1000);
+      });
+    }
+
+    function waitUntilPipelineIsDeleted(application, executionId) {
+
+      return getExecutions(application.name).then((executions) => {
+        let match = executions.filter((execution) => execution.id === executionId);
+        let deferred = $q.defer();
+        if (match && !match.length) {
+          application.reloadExecutions().then(deferred.resolve);
+          return deferred.promise;
+        }
+        return $timeout(() => waitUntilPipelineIsDeleted(application, executionId), 1000);
+      });
+    }
+
+    function cancelExecution(application, executionId) {
       var deferred = $q.defer();
       $http({
         method: 'PUT',
         url: [
           apiHostConfig.baseUrl(),
           'applications',
-          (applicationName || $stateParams.application), // TODO: remove stateParams
+          application.name,
           'pipelines',
           executionId,
           'cancel',
         ].join('/')
       }).then(
-          function() {
-            scheduler.scheduleImmediate();
-            deferred.resolve();
-          },
-          function(exception) {
-            deferred.reject(exception && exception.data ? exception.message : null);
-          }
-        );
+        () => waitUntilPipelineIsCancelled(application, executionId).then(deferred.resolve),
+        (exception) => deferred.reject(exception && exception.data ? exception.message : null)
+      );
       return deferred.promise;
     }
 
@@ -107,12 +126,8 @@ module.exports = angular.module('spinnaker.core.delivery.executions.service', [
           executionId,
         ].join('/')
       }).then(
-        function() {
-          application.reloadExecutions().then(deferred.resolve);
-        },
-        function(exception) {
-          deferred.reject(exception && exception.data ? exception.data.message : null);
-        }
+        () => waitUntilPipelineIsDeleted(application, executionId).then(deferred.resolve),
+        (exception) => deferred.reject(exception && exception.data ? exception.data.message : null)
       );
       return deferred.promise;
     }
