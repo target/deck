@@ -8,10 +8,10 @@ module.exports = angular
     require('../../core/authentication/authentication.service.js'),
   ])
   .config(function ($provide) {
-    $provide.decorator('$exceptionHandler', function($delegate, settings, authenticationService, $) {
+    $provide.decorator('$exceptionHandler', function($delegate, alertConfig, authenticationService, $) {
       return function(exception, cause) {
         $delegate(exception, cause);
-        if (!settings.alert) {
+        if (!alertConfig.alert()) {
           return;
         }
         let payload = {
@@ -30,19 +30,19 @@ module.exports = angular
           actions: [
             {
               action: 'email',
-              suppressTimeSecs: settings.alert.throttleInSeconds,
-              to: settings.alert.recipients,
-              subject: settings.alert.subject || '[Spinnaker] Error in Deck',
-              htmlTemplate: settings.alert.template || 'spinnaker_deck_error',
+              suppressTimeSecs: alertConfig.throttleInSeconds(),
+              to: alertConfig.recipients(),
+              subject: alertConfig.subject() || '[Spinnaker] Error in Deck',
+              htmlTemplate: alertConfig.template() || 'spinnaker_deck_error',
               incidentKey: exception.message,
             }
           ],
         };
         if (navigator.sendBeacon) {
-          navigator.sendBeacon(settings.alert.url, JSON.stringify(payload));
+          navigator.sendBeacon(alertConfig.url(), JSON.stringify(payload));
         } else {
           console.warn('no beacon support :(');
-          $.post(settings.alert.url, JSON.stringify(payload));
+          $.post(alertConfig.url(), JSON.stringify(payload));
         }
       };
     });

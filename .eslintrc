@@ -51,5 +51,11 @@
     "__FEATURE_VPC_MIGRATOR_ENABELED__" : true,
     "__FEATURE_CLUSTER_DIFF_ENABLED__": true,
     "__FEATRUE_PIPELINES_ENABLED__" : true,
+    "__ALERTING_ON__" : true,
+    "__ALERTING_URL__" : true,
+    "__ALERTING_RECIPIENTS__" : true,
+    "__ALERTING_SUBJECT__" : true,
+    "__ALERTING_TEMPLATE_NAME__" : true,
+    "__ALERTING_THROTTLE_SEC__" : true,
   }
 }

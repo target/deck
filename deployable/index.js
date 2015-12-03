@@ -37,6 +37,14 @@ module.exports = angular.module('spinnaker-ui-deployable', [
 })
 .config(function(defaultProvidersConfigProvider) {
   defaultProvidersConfigProvider.set(__DEFAULT_PROVIDERS__);
+})
+.config(function(alertConfigProvider) {
+  alertConfigProvider.setAlerting(__ALERTING_ON__);
+  alertConfigProvider.setUrl(__ALERTING_URL__);
+  alertConfigProvider.setRecipients(__ALERTING_RECIPIENTS__);
+  alertConfigProvider.setSubject(__ALERTING_SUBJECT__);
+  alertConfigProvider.setTemplateName(__ALERTING_TEMPLATE_NAME__);
+  alertConfigProvider.setThrottleInSeconds(__ALERTING_THROTTLE_SEC__);
 });
 
 

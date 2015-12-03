@@ -21,10 +21,17 @@ definitions.__DEFAULT_PROVIDERS__ = process.env.DEFAULT_PROVIDERS || "['aws']";
 definitions.__FEATURE_REBAKE_ENABELED__ = process.env.FEATURE_REBAKE_ENABELED || "true";
 definitions.__FEATURE_NETFLIX_MODE_ENABELED__ = process.env.FEATURE_NETFLIX_MODE_ENABELED || "true";
 definitions.__FEATURE_BLESK_ENABLED__ = process.env.FEATURE_BLESK_ENABLED || "true";
-definitions.__FEATURE_FAST_PROPERTIES_ENABLED__ = process.env.FEATURE_FAST_PROPERTIES_ENABLED || true;
+definitions.__FEATURE_FAST_PROPERTIES_ENABLED__ = process.env.FEATURE_FAST_PROPERTIES_ENABLED || "true";
 definitions.__FEATURE_VPC_MIGRATOR_ENABELED__ = process.env.FEATURE_VPC_MIGRATOR_ENABELED || "true";
 definitions.__FEATURE_CLUSTER_DIFF_ENABLED__ = process.env.FEATURE_CLUSTER_DIFF_ENABLED || "true";
 definitions.__FEATRUE_PIPELINES_ENABLED__ = process.env.FEATRUE_PIPELINES_ENABLED || "true";
+
+definitions.__ALERTING_ON__ = process.env.ALERTING_ON || "false";
+definitions.__ALERTING_URL__ = process.env.ALERTING_URL || "'http://atlas-alert-api-main.us-west-1.prod.netflix.net:7001/api/v3/trigger'";
+definitions.__ALERTING_RECIPIENTS__ = process.env.ALERTING_RECIPIENTS || "['chrisb@netflix.com', 'zthrash@netflix.com']";
+definitions.__ALERTING_SUBJECT__ = process.env.ALERTING_SUBJECT || "'[Spinnaker] Error in Deck'";
+definitions.__ALERTING_TEMPLATE_NAME__ = process.env.ALERTING_TEMPLATE_NAME || "'spinnaker_deck_error'";
+definitions.__ALERTING_THROTTLE_SEC__ = process.env.ALERTING_THROTTLE_SEC || 5 * 60;
 
 var alias = sharedConfig.sharedAliases;
 alias['src'] = path.join(__dirname, '..', 'app', 'scripts');

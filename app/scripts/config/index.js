@@ -9,5 +9,6 @@ module.exports = angular
     require('./featureFlags'),
     require('./whatsNew'),
     require('./defaultProviders'),
+    require('./alert'),
     require('./settings'),
   ]);

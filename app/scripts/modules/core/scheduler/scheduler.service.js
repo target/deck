@@ -6,7 +6,7 @@ module.exports = angular.module('spinnaker.core.scheduler', [
   require('config'),
   require('../utils/rx.js'),
 ])
-  .factory('scheduler', function(rx, settings, $q, $log, $window, $timeout) {
+  .factory('scheduler', function(rx, apiHostConfig, $q, $log, $window, $timeout) {
     var scheduler = new rx.Subject();
 
     let lastRun = new Date().getTime();

@@ -3,12 +3,13 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.pipeline.stage.bake.aws.executionDetails.controller', [
+  require('config'),
   require('angular-ui-router'),
   require('../../../../../delivery/details/executionDetailsSection.service.js'),
   require('../../../../../delivery/details/executionDetailsSectionNav.directive.js'),
 ])
   .controller('awsBakeExecutionDetailsCtrl', function ($scope, $stateParams, executionDetailsSectionService, $timeout,
-                                                       $interpolate, settings) {
+                                                       $interpolate, settings, apiHostConfig, featureFlagConfig) {
 
     $scope.configSections = ['bakeConfig', 'taskStatus'];
 
@@ -22,9 +23,9 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.bake.aws.executio
         $scope.provider = $scope.stage.context.cloudProviderType || 'aws';
       });
 
-      $scope.rebakeControlEnabled = settings.feature.rebakeControlEnabled;
+      $scope.rebakeControlEnabled = featureFlagConfig.get('rebakeControlEnabled');
 
-      $scope.bakeryDetailUrl = $interpolate(settings.bakeryDetailUrl);
+      $scope.bakeryDetailUrl = $interpolate(apiHostConfig.bakeryDetailEndpoint());
     }
 
     initialize();

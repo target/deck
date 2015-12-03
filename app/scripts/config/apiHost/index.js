@@ -70,7 +70,7 @@ module.exports = angular.module('spinnaker.core.config.apiHost', [
           feedbackEndpoint: () => {
             return feedbackEndpoint;
           },
-          backeryDetailEndpoint: () => {
+          bakeryDetailEndpoint: () => {
             return bakeryDetailEndpoint;
           },
           authEnabled: () => {
