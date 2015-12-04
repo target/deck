@@ -6,9 +6,9 @@ require('./chaosMonkeyConfig.directive.less');
 
 module.exports = angular
   .module('spinnaker.netflix.chaosMonkey.config.directive', [
+    require('config'),
     require('../../core/utils/lodash.js'),
     require('../../core/application/service/applications.write.service.js'),
-    require('../../core/config/settings.js'),
     require('./chaosMonkeyExceptions.directive.js'),
     require('./chaosMonkeyConfigFooter.directive.js'),
   ])
@@ -24,7 +24,7 @@ module.exports = angular
       controllerAs: 'vm',
     };
   })
-  .controller('ChaosMonkeyConfigCtrl', function($scope, _, applicationWriter, settings) {
+  .controller('ChaosMonkeyConfigCtrl', function($scope, _, applicationWriter, featureFlagConfig ) {
     let config = this.application.attributes.chaosMonkey || {
         enabled: false,
         meanTimeBetweenKillsInWorkDays: 5,
@@ -44,7 +44,7 @@ module.exports = angular
 
     this.config = _.cloneDeep(config);
 
-    this.chaosEnabled = settings.feature && settings.feature.chaosMonkey;
+    this.chaosEnabled = featureFlagConfig.get('chaosMonkey');
 
     this.groupingOptions = [
       { key: 'app', label: 'App' },
@@ -58,5 +58,4 @@ module.exports = angular
 
     $scope.$watch(() => this.config, this.configChanged, true);
 
-  })
-  .name;
+  });

@@ -36,8 +36,8 @@ describe('Service: executionService', function () {
     it('should wait until pipeline is not running, then resolve', function () {
       let completed = false;
       let executionId = 'abc';
-      let cancelUrl = [ settings.gateUrl, 'applications', 'deck', 'pipelines', executionId, 'cancel' ].join('/');
-      let checkUrl = [ settings.gateUrl, 'applications', 'deck', 'pipelines' ].join('/')
+      let cancelUrl = [ apiHostConfig.baseUrl(), 'applications', 'deck', 'pipelines', executionId, 'cancel' ].join('/');
+      let checkUrl = [ apiHostConfig.baseUrl(), 'applications', 'deck', 'pipelines' ].join('/')
         .concat('?statuses=RUNNING,SUSPENDED,NOT_STARTED');
       let application = { name: 'deck', reloadExecutions: () => $q.when(null) };
 
@@ -57,7 +57,7 @@ describe('Service: executionService', function () {
     it('should propagate rejection from failed cancel', function () {
       let failed = false;
       let executionId = 'abc';
-      let cancelUrl = [ settings.gateUrl, 'applications', 'deck', 'pipelines', executionId, 'cancel' ].join('/');
+      let cancelUrl = [ apiHostConfig.baseUrl(), 'applications', 'deck', 'pipelines', executionId, 'cancel' ].join('/');
       let application = { name: 'deck', reloadExecutions: () => $q.when(null) };
 
       $httpBackend.expectPUT(cancelUrl).respond(500, []);
@@ -72,8 +72,8 @@ describe('Service: executionService', function () {
     it('should wait until pipeline is missing, then resolve', function () {
       let completed = false;
       let executionId = 'abc';
-      let deleteUrl = [ settings.gateUrl, 'pipelines', executionId ].join('/');
-      let checkUrl = [ settings.gateUrl, 'applications', 'deck', 'pipelines' ].join('/');
+      let deleteUrl = [ apiHostConfig.baseUrl(), 'pipelines', executionId ].join('/');
+      let checkUrl = [ apiHostConfig.baseUrl(), 'applications', 'deck', 'pipelines' ].join('/');
       let application = { name: 'deck', reloadExecutions: () => $q.when(null) };
 
       $httpBackend.expectDELETE(deleteUrl).respond(200, []);
@@ -92,7 +92,7 @@ describe('Service: executionService', function () {
     it('should propagate rejection from failed delete', function () {
       let failed = false;
       let executionId = 'abc';
-      let deleteUrl = [ settings.gateUrl, 'pipelines', executionId ].join('/');
+      let deleteUrl = [ apiHostConfig.baseUrl(), 'pipelines', executionId ].join('/');
       let application = { name: 'deck', reloadExecutions: () => $q.when(null) };
 
       $httpBackend.expectDELETE(deleteUrl).respond(500, []);

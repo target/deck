@@ -26,6 +26,7 @@ definitions.__FEATURE_FAST_PROPERTIES_ENABLED__ = process.env.FEATURE_FAST_PROPE
 definitions.__FEATURE_VPC_MIGRATOR_ENABELED__ = process.env.FEATURE_VPC_MIGRATOR_ENABELED || "true";
 definitions.__FEATURE_CLUSTER_DIFF_ENABLED__ = process.env.FEATURE_CLUSTER_DIFF_ENABLED || "true";
 definitions.__FEATRUE_PIPELINES_ENABLED__ = process.env.FEATRUE_PIPELINES_ENABLED || "true";
+definitions.__FEATRUE_CHAOS_MONKEY_ENABLED__= process.env.FEATRUE_CHAOS_MONKEY_ENABLED || "true";
 
 definitions.__ALERTING_ON__ = process.env.ALERTING_ON || "false";
 definitions.__ALERTING_URL__ = process.env.ALERTING_URL || "'http://atlas-alert-api-main.us-west-1.prod.netflix.net:7001/api/v3/trigger'";

@@ -29,6 +29,7 @@ module.exports = angular.module('spinnaker-ui-deployable', [
   featureFlagConfigProvider.set('vpcMigrator', __FEATURE_VPC_MIGRATOR_ENABELED__);
   featureFlagConfigProvider.set('clusterDiff', __FEATURE_CLUSTER_DIFF_ENABLED__);
   featureFlagConfigProvider.set('pipelines', __FEATRUE_PIPELINES_ENABLED__);
+  featureFlagConfigProvider.set('chaosMonkey', __FEATRUE_CHAOS_MONKEY_ENABLED__);
 })
 .config(function(whatsNewConfigProvider) {
   whatsNewConfigProvider.setGistId(__WHATS_NEW_GIST_ID__);

@@ -4,15 +4,15 @@ let angular = require('angular');
 
 module.exports = angular
   .module('spinnaker.netflix.application.create.modal.controller', [
+    require('config'),
     require('angular-ui-router'),
     require('../../core/application/service/applications.write.service.js'),
     require('../../core/application/service/applications.read.service.js'),
     require('../../core/utils/lodash.js'),
     require('../../core/account/account.service.js'),
-    require('../../core/config/settings.js'),
   ])
   .controller('netflixCreateApplicationModalCtrl', function($controller, $scope, $q, $log, $state, $modalInstance,
-                                                            settings,
+                                                            featureFlagConfig,
                                                             accountService, applicationWriter, applicationReader, _) {
 
     angular.extend(this, $controller('CreateApplicationModalCtrl', {
@@ -27,7 +27,7 @@ module.exports = angular
       _ : _,
     }));
 
-    this.chaosEnabled = settings.feature.chaosMonkey;
+    this.chaosEnabled = featureFlagConfig.get('chaosMonkey');
 
     if (this.chaosEnabled) {
       this.application.chaosMonkey = {
@@ -40,4 +40,4 @@ module.exports = angular
       };
     }
 
-  }).name;
+  });
