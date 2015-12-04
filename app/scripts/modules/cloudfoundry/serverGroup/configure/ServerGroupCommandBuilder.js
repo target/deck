@@ -3,6 +3,7 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.cf.serverGroupCommandBuilder.service', [
+  require('config'),
   require('exports?"restangular"!imports?_=lodash!restangular'),
   require('../../../core/cache/deckCacheFactory.js'),
   require('../../../core/account/account.service.js'),
@@ -10,7 +11,7 @@ module.exports = angular.module('spinnaker.cf.serverGroupCommandBuilder.service'
   require('../../../core/naming/naming.service.js'),
   require('../../../core/utils/lodash.js'),
 ])
-  .factory('cfServerGroupCommandBuilder', function (settings, Restangular, $q,
+  .factory('cfServerGroupCommandBuilder', function (providersConfig, Restangular, $q,
                                                      accountService, instanceTypeService, namingService, _) {
 
       function populateCustomMetadata(metadataItems, command) {
@@ -67,9 +68,9 @@ module.exports = angular.module('spinnaker.cf.serverGroupCommandBuilder.service'
       function buildNewServerGroupCommand(application, defaults) {
       defaults = defaults || {};
 
-      var defaultCredentials = defaults.account || settings.providers.cf.defaults.account;
-      var defaultRegion = defaults.region || settings.providers.cf.defaults.region;
-      var defaultZone = defaults.zone || settings.providers.cf.defaults.zone;
+      var defaultCredentials = defaults.account || providersConfig.providers().cf.defaults.account;
+      var defaultRegion = defaults.region || providersConfig.providers().cf.defaults.region;
+      var defaultZone = defaults.zone || providersConfig.providers().cf.defaults.zone;
 
       var command = {
         application: application.name,

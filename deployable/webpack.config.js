@@ -18,6 +18,7 @@ definitions.__AUTH_ENDPOINT__ = process.env.AUTH_ENDPOINT || "'https://spinnaker
 definitions.__FEEDBACK_URL__ = process.env.FEEDBACK_URL || "'http://hootch.test.netflix.net/submit'";
 definitions.__BAKERY_DETAIL_URL__ = process.env.BAKERY_DETAIL_URL || "'http://bakery.test.netflix.net/#/?region={{context.region}}&package={{context.package}}&detail=bake:{{context.status.resourceId}}'";
 definitions.__DEFAULT_PROVIDERS__ = process.env.DEFAULT_PROVIDERS || "['aws']";
+
 definitions.__FEATURE_REBAKE_ENABELED__ = process.env.FEATURE_REBAKE_ENABELED || "true";
 definitions.__FEATURE_NETFLIX_MODE_ENABELED__ = process.env.FEATURE_NETFLIX_MODE_ENABELED || "true";
 definitions.__FEATURE_BLESK_ENABLED__ = process.env.FEATURE_BLESK_ENABLED || "true";
@@ -32,6 +33,17 @@ definitions.__ALERTING_RECIPIENTS__ = process.env.ALERTING_RECIPIENTS || "['chri
 definitions.__ALERTING_SUBJECT__ = process.env.ALERTING_SUBJECT || "'[Spinnaker] Error in Deck'";
 definitions.__ALERTING_TEMPLATE_NAME__ = process.env.ALERTING_TEMPLATE_NAME || "'spinnaker_deck_error'";
 definitions.__ALERTING_THROTTLE_SEC__ = process.env.ALERTING_THROTTLE_SEC || 5 * 60;
+
+var awsConfig = "{ defaults: { account: 'test', region: 'us-east-1' }, defaultSecurityGroups: ['nf-datacenter-vpc', 'nf-infrastructure-vpc', 'nf-datacenter', 'nf-infrastructure'] }";
+var gceConfig = "{ defaults: { account: 'my-google-account', region: 'us-central1', zone: 'us-central1-f', },}";
+var azureConfig = "{ defaults: { account: 'azure-test', region: 'West US' },}";
+var titanConfig = "{ defaults: { account: 'titantest', region: 'us-east-1' },}";
+var cfConfig = "{ defaults: { account: 'titantest', region: 'us-east-1' },}";
+definitions.__AWS_PROVIDER_SETTINGS__ = process.env.AWS_PROVIDER_SETTINGS || awsConfig;
+definitions.__GCE_PROVIDER_SETTINGS__ = process.env.GCE_PROVIDER_SETTINGS || gceConfig;
+definitions.__AZURE_PROVIDER_SETTINGS__ = process.env.AZURE_PROVIDER_SETTINGS || azureConfig;
+definitions.__TITAN_PROVIDER_SETTINGS__ = process.env.TITAN_PROVIDER_SETTINGS || titanConfig;
+definitions.__CF_PROVIDER_SETTINGS__ = process.env.CF_PROVIDER_SETTINGS || cfConfig;
 
 var alias = sharedConfig.sharedAliases;
 alias['src'] = path.join(__dirname, '..', 'app', 'scripts');

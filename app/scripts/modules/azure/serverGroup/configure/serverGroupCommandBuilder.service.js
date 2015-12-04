@@ -3,6 +3,7 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.azure.serverGroupCommandBuilder.service', [
+  require('config'),
   require('exports?"restangular"!imports?_=lodash!restangular'),
   require('../../../core/account/account.service.js'),
   require('../../../netflix/serverGroup/diff/diff.service.js'),
@@ -12,7 +13,7 @@ module.exports = angular.module('spinnaker.azure.serverGroupCommandBuilder.servi
   require('./serverGroupConfiguration.service.js'),
   require('../../../core/utils/lodash.js'),
 ])
-  .factory('azureServerGroupCommandBuilder', function (settings, Restangular, $exceptionHandler, $q, diffService,
+  .factory('azureServerGroupCommandBuilder', function (providersConfig, Restangular, $exceptionHandler, $q, diffService,
                                                      accountService, subnetReader, namingService, instanceTypeService,
                                                      azureServerGroupConfigurationService, _) {
 
@@ -20,8 +21,8 @@ module.exports = angular.module('spinnaker.azure.serverGroupCommandBuilder.servi
       defaults = defaults || {};
       var regionsKeyedByAccountLoader = accountService.getRegionsKeyedByAccount('azure');
 
-      var defaultCredentials = defaults.account || application.defaultCredentials || settings.providers.azure.defaults.account;
-      var defaultRegion = defaults.region || application.defaultRegion || settings.providers.azure.defaults.region;
+      var defaultCredentials = defaults.account || application.defaultCredentials || providersConfig.providers().azure.defaults.account;
+      var defaultRegion = defaults.region || application.defaultRegion || providersConfig.providers().azure.defaults.region;
 
       var preferredZonesLoader = accountService.getAvailabilityZonesForAccountAndRegion('azure', defaultCredentials, defaultRegion);
 

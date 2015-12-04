@@ -16,7 +16,7 @@ describe('Controller: awsCloneServerGroup', function () {
   );
 
   beforeEach(function() {
-    window.inject(function ($controller, $rootScope, accountService, serverGroupWriter, awsImageReader, settings,
+    window.inject(function ($controller, $rootScope, accountService, serverGroupWriter, awsImageReader,
                      searchService, awsInstanceTypeService, modalWizardService, securityGroupReader, taskMonitorService,
                      awsServerGroupConfigurationService, $q, subnetReader, keyPairsReader, loadBalancerReader) {
 
@@ -30,7 +30,6 @@ describe('Controller: awsCloneServerGroup', function () {
       this.securityGroupReader = securityGroupReader;
       this.awsServerGroupConfigurationService = awsServerGroupConfigurationService;
       this.taskMonitorService = taskMonitorService;
-      this.settings = settings;
       this.subnetReader = subnetReader;
       this.keyPairsReader = keyPairsReader;
       this.loadBalancerReader = loadBalancerReader;
@@ -92,7 +91,6 @@ describe('Controller: awsCloneServerGroup', function () {
       window.inject(function ($controller) {
         this.ctrl = $controller('awsCloneServerGroupCtrl', {
           $scope: this.$scope,
-          settings: this.settings,
           $modalInstance: this.modalInstance,
           accountService: this.accountService,
           serverGroupWriter: this.serverGroupWriter,
@@ -210,7 +208,6 @@ describe('Controller: awsCloneServerGroup', function () {
       window.inject(function ($controller) {
         this.ctrl = $controller('awsCloneServerGroupCtrl', {
           $scope: this.$scope,
-          settings: this.settings,
           $modalInstance: this.modalInstance,
           accountService: this.accountService,
           serverGroupWriter: this.serverGroupWriter,
@@ -365,7 +362,6 @@ describe('Controller: awsCloneServerGroup', function () {
       window.inject(function ($controller) {
         this.ctrl = $controller('awsCloneServerGroupCtrl', {
           $scope: this.$scope,
-          settings: this.settings,
           $modalInstance: this.modalInstance,
           accountService: this.accountService,
           serverGroupWriter: this.serverGroupWriter,

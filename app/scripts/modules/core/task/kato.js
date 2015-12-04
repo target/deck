@@ -7,7 +7,7 @@ module.exports = angular.module('spinnaker.core.task.kato.service', [
   require('../utils/lodash.js'),
   require('../cache/deckCacheFactory.js'),
 ])
-  .factory('kato', function(settings, Restangular, $timeout, $q, _) {
+  .factory('kato', function(Restangular, $timeout, $q, _) {
 
     function updateTask(original, updated) {
       original.status = updated.status;

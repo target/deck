@@ -24,7 +24,7 @@ module.exports = angular.module('spinnaker.loadBalancer.aws.create.controller', 
                                                     accountService, awsLoadBalancerTransformer, securityGroupReader,
                                                     cacheInitializer, infrastructureCaches, loadBalancerReader,
                                                     modalWizardService, loadBalancerWriter, taskMonitorService,
-                                                    subnetReader, namingService, settings,
+                                                    subnetReader, namingService, providersConfig,
                                                     application, loadBalancer, isNew) {
 
     var ctrl = this;
@@ -68,8 +68,8 @@ module.exports = angular.module('spinnaker.loadBalancer.aws.create.controller', 
 
     function initializeCreateMode() {
       preloadSecurityGroups();
-      if (_.has(settings, 'providers.aws.defaultSecurityGroups')) {
-        defaultSecurityGroups = settings.providers.aws.defaultSecurityGroups;
+      if (_.has(providersConfig.providers().aws, 'defaultSecurityGroups')) {
+        defaultSecurityGroups = providersConfig.providers().aws.defaultSecurityGroups;
       }
       accountService.listAccounts('aws').then(function (accounts) {
         $scope.accounts = accounts;

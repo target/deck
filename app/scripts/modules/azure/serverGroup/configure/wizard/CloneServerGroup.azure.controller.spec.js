@@ -16,7 +16,7 @@
    );
 
    beforeEach(function() {
-     window.inject(function ($controller, $rootScope, accountService, serverGroupWriter, azureImageReader, settings,
+     window.inject(function ($controller, $rootScope, accountService, serverGroupWriter, azureImageReader,
                       searchService, azureInstanceTypeService, modalWizardService, securityGroupReader, taskMonitorService,
                       azureServerGroupConfigurationService, $q, subnetReader, keyPairsReader, loadBalancerReader) {
 
@@ -30,7 +30,6 @@
        this.securityGroupReader = securityGroupReader;
        this.azureServerGroupConfigurationService = azureServerGroupConfigurationService;
        this.taskMonitorService = taskMonitorService;
-       this.settings = settings;
        this.subnetReader = subnetReader;
        this.keyPairsReader = keyPairsReader;
        this.loadBalancerReader = loadBalancerReader;
@@ -92,7 +91,6 @@
        window.inject(function ($controller) {
          this.ctrl = $controller('azureCloneServerGroupCtrl', {
            $scope: this.$scope,
-           settings: this.settings,
            $modalInstance: this.modalInstance,
            accountService: this.accountService,
            serverGroupWriter: this.serverGroupWriter,
@@ -210,7 +208,6 @@
        window.inject(function ($controller) {
          this.ctrl = $controller('azureCloneServerGroupCtrl', {
            $scope: this.$scope,
-           settings: this.settings,
            $modalInstance: this.modalInstance,
            accountService: this.accountService,
            serverGroupWriter: this.serverGroupWriter,
@@ -365,7 +362,6 @@
        window.inject(function ($controller) {
          this.ctrl = $controller('azureCloneServerGroupCtrl', {
            $scope: this.$scope,
-           settings: this.settings,
            $modalInstance: this.modalInstance,
            accountService: this.accountService,
            serverGroupWriter: this.serverGroupWriter,

@@ -3,6 +3,7 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service', [
+  require('config'),
   require('exports?"restangular"!imports?_=lodash!restangular'),
   require('../../../core/cache/deckCacheFactory.js'),
   require('../../../core/account/account.service.js'),
@@ -10,7 +11,7 @@ module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service
   require('../../../core/naming/naming.service.js'),
   require('../../../core/utils/lodash.js'),
 ])
-  .factory('gceServerGroupCommandBuilder', function (settings, Restangular, $q,
+  .factory('gceServerGroupCommandBuilder', function (providersConfig, Restangular, $q,
                                                      accountService, instanceTypeService, namingService, _) {
 
     // Two assumptions here:
@@ -171,9 +172,9 @@ module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service
     function buildNewServerGroupCommand(application, defaults) {
       defaults = defaults || {};
 
-      var defaultCredentials = defaults.account || settings.providers.gce.defaults.account;
-      var defaultRegion = defaults.region || settings.providers.gce.defaults.region;
-      var defaultZone = defaults.zone || settings.providers.gce.defaults.zone;
+      var defaultCredentials = defaults.account || providersConfig.providers().gce.defaults.account;
+      var defaultRegion = defaults.region || providersConfig.providers().gce.defaults.region;
+      var defaultZone = defaults.zone || providersConfig.providers().gce.defaults.zone;
 
       var command = {
         application: application.name,

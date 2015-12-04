@@ -5,13 +5,23 @@ describe('Controller: awsCreateLoadBalancerCtrl', function () {
   // load the controller's module
   beforeEach(
     window.module(
+      require('config'),
       require('./createLoadBalancer.controller')
     )
   );
 
   // Initialize the controller and a mock scope
-  beforeEach(window.inject(function ($controller, $rootScope) {
+  beforeEach(window.inject(function ($controller, $rootScope, providersConfig ) {
     this.$scope = $rootScope.$new();
+
+    providersConfig.addProvider('aws', {
+      defaults: {
+        account: 'test',
+        region: 'us-east-1'
+      },
+      defaultSecurityGroups: ['nf-datacenter-vpc', 'nf-infrastructure-vpc', 'nf-datacenter', 'nf-infrastructure'],
+    });
+
     this.ctrl = $controller('awsCreateLoadBalancerCtrl', {
       $scope: this.$scope,
       $modalInstance: { dismiss: angular.noop, result: { then: angular.noop } },

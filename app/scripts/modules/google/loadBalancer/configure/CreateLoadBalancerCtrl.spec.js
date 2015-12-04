@@ -8,13 +8,23 @@ describe('Controller: gceCreateLoadBalancerCtrl', function () {
   // load the controller's module
   beforeEach(function() {
       window.module(
+        require('config'),
         require('./CreateLoadBalancerCtrl.js')
       );
     });
 
   // Initialize the controller and a mock scope
-  beforeEach(window.inject(function ($controller, $rootScope, _modalWizardService_) {
+  beforeEach(window.inject(function ($controller, $rootScope, _modalWizardService_, providersConfig) {
     this.$scope = $rootScope.$new();
+
+    providersConfig.addProvider('gce', {
+      defaults: {
+        account: 'my-google-account',
+        region: 'us-central1',
+        zone: 'us-central1-f',
+      },
+    });
+
     this.ctrl = $controller('gceCreateLoadBalancerCtrl', {
       $scope: this.$scope,
       $modalInstance: { dismiss: angular.noop, result: { then: angular.noop } },

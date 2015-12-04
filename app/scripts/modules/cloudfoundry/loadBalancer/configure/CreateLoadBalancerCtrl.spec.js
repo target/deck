@@ -8,12 +8,19 @@ describe('Controller: cfCreateLoadBalancerCtrl', function () {
   // load the controller's module
   beforeEach(function() {
       window.module(
+        require('config'),
         require('./CreateLoadBalancerCtrl.js')
       );
     });
 
   // Initialize the controller and a mock scope
-  beforeEach(window.inject(function ($controller, $rootScope, _modalWizardService_) {
+  beforeEach(window.inject(function ($controller, $rootScope, _modalWizardService_, providersConfig ) {
+    providersConfig.addProvider('cf', {
+      defaults:{
+        account: 'test'
+      }
+    });
+
     this.$scope = $rootScope.$new();
     this.ctrl = $controller('cfCreateLoadBalancerCtrl', {
       $scope: this.$scope,

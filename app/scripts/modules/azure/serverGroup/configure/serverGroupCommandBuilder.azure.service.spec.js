@@ -20,17 +20,18 @@
 
    beforeEach(
      window.module(
+       require('config'),
        require('./serverGroupCommandBuilder.service.js')
      )
    );
 
    beforeEach(
-     window.inject(function (_$httpBackend_, azureServerGroupCommandBuilder, _accountService_, _instanceTypeService_, _$q_, _settings_, $rootScope) {
+     window.inject(function (_$httpBackend_, azureServerGroupCommandBuilder, _accountService_, _instanceTypeService_, _$q_, _providersConfig_, $rootScope) {
        this.$httpBackend = _$httpBackend_;
        this.service = azureServerGroupCommandBuilder;
        this.accountService = _accountService_;
        this.$q = _$q_;
-       this.settings = _settings_;
+       this.providersConfig = _providersConfig_;
        this.$scope = $rootScope;
        spyOn(_instanceTypeService_, 'getCategoryForInstanceType').and.returnValue(_$q_.when('custom'));
    }));
@@ -51,25 +52,28 @@
          }
        };
 
-       this.settings.providers.azure.defaults.account = 'test';
-       this.settings.providers.azure.defaults.region = 'us-east-1';
-
-       this.settings.preferredZonesByAccount = {
-         test: {
-           'us-west-1': ['a', 'b'],
-           'us-east-1': ['d', 'e'],
+       this.providersConfig.addProvider('azure', {
+         defaults: {
+           account: 'test',
+           region: 'us-east-1'
          },
-         prod: {
-           'us-west-1': ['d', 'g'],
-           'us-east-1': ['d', 'e'],
-           'eu-west-1': ['a', 'm']
-         },
-         default: {
-           'us-west-1': ['a', 'c'],
-           'us-east-1': ['d', 'e'],
-           'eu-west-1': ['a', 'm']
+         preferredZonesByAccount: {
+           test: {
+             'us-west-1': ['a', 'b'],
+             'us-east-1': ['d', 'e'],
+           },
+           prod: {
+             'us-west-1': ['d', 'g'],
+             'us-east-1': ['d', 'e'],
+             'eu-west-1': ['a', 'm']
+           },
+           default: {
+             'us-west-1': ['a', 'c'],
+             'us-east-1': ['d', 'e'],
+             'eu-west-1': ['a', 'm']
+           }
          }
-       };
+       });
 
        spyOn(this.accountService, 'getAvailabilityZonesForAccountAndRegion').and.returnValue(
          this.$q.when(['d', 'g'])

@@ -4,6 +4,7 @@ describe('authenticationProvider: application startup', function() {
 
   beforeEach(
     window.module(
+      require('config'),
       require('./authentication.module.js')
     )
   );
@@ -12,11 +13,10 @@ describe('authenticationProvider: application startup', function() {
     this.apiHostConfig.disableAuth();
   });
 
-  beforeEach(window.inject(function(authenticationService, $timeout, $httpBackend, settings, apiHostConfig, redirectService, $window, $location, $rootScope) {
+  beforeEach(window.inject(function(authenticationService, $timeout, $httpBackend,  apiHostConfig, redirectService, $window, $location, $rootScope) {
     this.authenticationService = authenticationService;
     this.$timeout = $timeout;
     this.$http = $httpBackend;
-    this.settings = settings;
     this.redirectService = redirectService;
     this.$window = $window;
     this.$location = $location;

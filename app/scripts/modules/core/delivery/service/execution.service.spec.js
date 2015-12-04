@@ -4,7 +4,6 @@ describe('Service: executionService', function () {
 
   var executionService;
   var $httpBackend;
-  var settings;
   var timeout;
   var $q;
   var apiHostConfig;

@@ -3,6 +3,7 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.task.controller', [
+  require('config'),
   require('../utils/lodash.js'),
   require('./taskProgressBar.directive.js'),
   require('../cache/viewStateCache.js'),
@@ -12,7 +13,7 @@ module.exports = angular.module('spinnaker.core.task.controller', [
   require('angular-ui-router'),
   require('../cache/deckCacheFactory.js'),
 ])
-  .controller('TasksCtrl', function ($scope, $state, $q, settings, app, _, viewStateCache, taskWriter, confirmationModalService) {
+  .controller('TasksCtrl', function ($scope, $state, $q, apiHostConfig, app, _, viewStateCache, taskWriter, confirmationModalService) {
     var controller = this;
     const application = app;
 
@@ -40,7 +41,7 @@ module.exports = angular.module('spinnaker.core.task.controller', [
       });
     }
 
-    $scope.tasksUrl = [settings.gateUrl, 'applications', application.name, 'tasks/'].join('/');
+    $scope.tasksUrl = [apiHostConfig.baseUrl(), 'applications', application.name, 'tasks/'].join('/');
     $scope.filterCountOptions = [10, 20, 30, 50, 100, 200];
 
     function initializeViewState() {

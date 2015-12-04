@@ -5,11 +5,20 @@ describe('awsServerGroupCommandBuilder', function() {
 
   beforeEach(
     window.module(
+      require('config'),
       require('./serverGroupCommandBuilder.service.js')
     )
   );
 
-  beforeEach(window.inject(function(awsServerGroupCommandBuilder, accountService, $q, $rootScope, subnetReader, instanceTypeService) {
+  beforeEach(window.inject(function(awsServerGroupCommandBuilder, accountService, providersConfig, $q, $rootScope, subnetReader, instanceTypeService) {
+    providersConfig.addProvider('aws', {
+      defaults: {
+        account: 'test',
+        region: 'us-east-1'
+      },
+      defaultSecurityGroups: ['nf-datacenter-vpc', 'nf-infrastructure-vpc', 'nf-datacenter', 'nf-infrastructure'],
+    });
+
     this.awsServerGroupCommandBuilder = awsServerGroupCommandBuilder;
     this.$scope = $rootScope;
     this.instanceTypeService = instanceTypeService;

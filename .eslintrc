@@ -57,5 +57,10 @@
     "__ALERTING_SUBJECT__" : true,
     "__ALERTING_TEMPLATE_NAME__" : true,
     "__ALERTING_THROTTLE_SEC__" : true,
+    "__AWS_PROVIDER_SETTINGS__" : true,
+    "__GCE_PROVIDER_SETTINGS__" : true,
+    "__AZURE_PROVIDER_SETTINGS__" : true,
+    "__CF_PROVIDER_SETTINGS__" : true,
+    "__TITAN_PROVIDER_SETTINGS__" : true,
   }
 }

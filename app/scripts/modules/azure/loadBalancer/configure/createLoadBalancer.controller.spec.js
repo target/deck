@@ -5,12 +5,19 @@ describe('Controller: azureCreateLoadBalancerCtrl', function () {
   // load the controller's module
   beforeEach(
     window.module(
+      require('config'),
       require('./createLoadBalancer.controller')
     )
   );
 
   // Initialize the controller and a mock scope
-  beforeEach(window.inject(function ($controller, $rootScope) {
+  beforeEach(window.inject(function ($controller, $rootScope, providersConfig) {
+    providersConfig.addProvider('azure', {
+      defaults: {
+        account: 'azure-test',
+        region: 'West US'
+      }
+    });
     this.$scope = $rootScope.$new();
     this.ctrl = $controller('azureCreateLoadBalancerCtrl', {
       $scope: this.$scope,

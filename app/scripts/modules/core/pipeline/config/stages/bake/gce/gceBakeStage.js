@@ -22,7 +22,7 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.gce.bakeStage', [
       ],
     });
   })
-  .controller('gceBakeStageCtrl', function($scope, bakeryService, $q, _, authenticationService, featureFlagConfig, settings) {
+  .controller('gceBakeStageCtrl', function($scope, bakeryService, $q, _, authenticationService, featureFlagConfig) {
 
     var stage = $scope.stage;
 

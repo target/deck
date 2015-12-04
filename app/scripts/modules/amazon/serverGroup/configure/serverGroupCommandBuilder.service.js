@@ -3,6 +3,7 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.aws.serverGroupCommandBuilder.service', [
+  require('config'),
   require('exports?"restangular"!imports?_=lodash!restangular'),
   require('../../../core/account/account.service.js'),
   require('../../subnet/subnet.read.service.js'),
@@ -11,7 +12,7 @@ module.exports = angular.module('spinnaker.aws.serverGroupCommandBuilder.service
   require('./serverGroupConfiguration.service.js'),
   require('../../../core/utils/lodash.js'),
 ])
-  .factory('awsServerGroupCommandBuilder', function (settings, Restangular, $q,
+  .factory('awsServerGroupCommandBuilder', function (providersConfig, Restangular, $q,
                                                      accountService, subnetReader, namingService, instanceTypeService,
                                                      awsServerGroupConfigurationService, _) {
 
@@ -19,8 +20,8 @@ module.exports = angular.module('spinnaker.aws.serverGroupCommandBuilder.service
       defaults = defaults || {};
       var regionsKeyedByAccountLoader = accountService.getRegionsKeyedByAccount('aws');
 
-      var defaultCredentials = defaults.account || application.defaultCredentials.aws || settings.providers.aws.defaults.account;
-      var defaultRegion = defaults.region || application.defaultRegions.aws || settings.providers.aws.defaults.region;
+      var defaultCredentials = defaults.account || application.defaultCredentials.aws || providersConfig.provider('aws').defaults.account;
+      var defaultRegion = defaults.region || application.defaultRegions.aws || providersConfig.provider('aws').defaults.region;
 
       var preferredZonesLoader = accountService.getAvailabilityZonesForAccountAndRegion('aws', defaultCredentials, defaultRegion);
 

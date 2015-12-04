@@ -3,9 +3,10 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.gce.loadBalancer.transformer', [
+  require('config'),
   require('../../core/utils/lodash.js')
 ])
-  .factory('gceLoadBalancerTransformer', function ($q, settings, _) {
+  .factory('gceLoadBalancerTransformer', function ($q, providersConfig, _) {
 
     function updateHealthCounts(container) {
       var instances = container.instances;
@@ -133,8 +134,8 @@ module.exports = angular.module('spinnaker.gce.loadBalancer.transformer', [
         provider: 'gce',
         stack: '',
         detail: '',
-        credentials: settings.providers.gce ? settings.providers.gce.defaults.account : null,
-        region: settings.providers.gce ? settings.providers.gce.defaults.region : null,
+        credentials: providersConfig.providers().gce ? providersConfig.providers().gce.defaults.account : null,
+        region: providersConfig.providers().gce ? providersConfig.providers().gce.defaults.region : null,
         healthCheckProtocol: 'HTTP',
         healthCheckPort: 80,
         healthCheckPath: '/',

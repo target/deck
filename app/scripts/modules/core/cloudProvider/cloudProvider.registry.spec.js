@@ -5,6 +5,15 @@ describe('cloudProviderRegistry: API', function() {
 
   beforeEach(
     window.module(
+      require('config'),
+      function(providersConfigProvider) {
+        providersConfigProvider.addProvider('aws', {});
+      }
+    )
+  );
+
+  beforeEach(
+    window.module(
       require('./cloudProvider.registry.js'),
       function(cloudProviderRegistryProvider) {
         configurer = cloudProviderRegistryProvider;

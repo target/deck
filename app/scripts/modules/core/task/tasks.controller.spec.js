@@ -9,16 +9,18 @@ describe('Controller: tasks', function () {
 
   controllerInjector = function (appData) {
     appData.registerAutoRefreshHandler = angular.noop;
-    return function ($controller, $rootScope, $q) {
+    return function ($controller, $rootScope, $q, apiHostConfig) {
       appData.reloadTasks = () => $q.when(null);
       var viewStateCache = { createCache: function() { return { get: angular.noop, put: angular.noop }; }};
       scope = $rootScope.$new();
+      apiHostConfig.setHost('spinnaker-api.prod.netflix.net');
       controller = $controller('TasksCtrl', { app: appData, $scope: scope, viewStateCache: viewStateCache });
     };
   };
 
   beforeEach(
     window.module(
+      require('config'),
       require('./tasks.controller.js')
     )
   );

@@ -3,12 +3,13 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.netflix.pipeline.stage.canary.actions.override.result.controller', [
+  require('config'),
   require('angular-ui-router'),
   require('../../../../../core/utils/lodash.js'),
   require('../../../../../core/delivery/details/executionDetailsSection.service.js'),
   require('../../../../../core/delivery/details/executionDetailsSectionNav.directive.js'),
 ])
-  .controller('EndCanaryCtrl', function ($scope, $http, $modalInstance, settings, canaryId) {
+  .controller('EndCanaryCtrl', function ($scope, $http, $modalInstance, apiHostConfig, canaryId) {
 
     $scope.command = {
       reason: null,
@@ -19,7 +20,7 @@ module.exports = angular.module('spinnaker.netflix.pipeline.stage.canary.actions
 
     this.endCanary = function() {
       $scope.state = 'submitting';
-      var targetUrl = [settings.gateUrl, 'canaries', canaryId, 'end'].join('/');
+      var targetUrl = [apiHostConfig.baseUrl(), 'canaries', canaryId, 'end'].join('/');
       $http.put(targetUrl, $scope.command)
         .success(function() {
           $scope.state = 'success';

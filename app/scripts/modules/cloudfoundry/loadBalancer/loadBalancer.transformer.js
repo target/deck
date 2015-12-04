@@ -3,9 +3,10 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.cf.loadBalancer.transformer', [
+  require('config'),
   require('../../core/utils/lodash.js')
 ])
-  .factory('cfLoadBalancerTransformer', function ($q, settings, _) {
+  .factory('cfLoadBalancerTransformer', function ($q, providersConfig, _) {
 
     function updateHealthCounts(container) {
       var instances = container.instances;
@@ -75,8 +76,8 @@ module.exports = angular.module('spinnaker.cf.loadBalancer.transformer', [
         provider: 'cf',
         stack: '',
         detail: '',
-        credentials: settings.providers.cf ? settings.providers.cf.defaults.account : null,
-        region: settings.providers.cf ? settings.providers.cf.defaults.region : null,
+        credentials: providersConfig.providers().cf ? providersConfig.providers().cf.defaults.account : null,
+        region: providersConfig.providers().cf ? providersConfig.providers().cf.defaults.region : null,
         healthCheckProtocol: 'DUMMY',
         healthCheckPort: '0'
       };

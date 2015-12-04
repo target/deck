@@ -3,10 +3,11 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.aws.loadBalancer.transformer', [
+  require('config'),
   require('../../core/utils/lodash.js'),
   require('../vpc/vpc.read.service.js'),
 ])
-  .factory('awsLoadBalancerTransformer', function (settings, _, vpcReader) {
+  .factory('awsLoadBalancerTransformer', function (_, vpcReader, providersConfig) {
 
     function updateHealthCounts(container) {
       var instances = container.instances;
@@ -139,8 +140,8 @@ module.exports = angular.module('spinnaker.aws.loadBalancer.transformer', [
     }
 
     function constructNewLoadBalancerTemplate(application) {
-      var defaultCredentials = application.defaultCredentials.aws || settings.providers.aws.defaults.account,
-          defaultRegion = application.defaultRegions.aws || settings.providers.aws.defaults.region;
+      var defaultCredentials = application.defaultCredentials.aws || providersConfig.providers().aws.defaults.account,
+          defaultRegion = application.defaultRegions.aws || providersConfig.providers().aws.defaults.region;
       return {
         stack: '',
         detail: '',

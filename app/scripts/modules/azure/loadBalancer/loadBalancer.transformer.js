@@ -6,7 +6,7 @@ module.exports = angular.module('spinnaker.azure.loadBalancer.transformer', [
   require('../../core/utils/lodash.js'),
   require('../vpc/vpc.read.service.js'),
 ])
-  .factory('azureLoadBalancerTransformer', function (settings, _, azureVpcReader) {
+  .factory('azureLoadBalancerTransformer', function (providersConfig, _, azureVpcReader) {
 
     function updateHealthCounts(container) {
       var instances = container.instances;
@@ -139,8 +139,8 @@ module.exports = angular.module('spinnaker.azure.loadBalancer.transformer', [
     }
 
     function constructNewLoadBalancerTemplate(application) {
-      var defaultCredentials = application.defaultCredentials || settings.providers.azure.defaults.account,
-          defaultRegion = application.defaultRegion || settings.providers.azure.defaults.region;
+      var defaultCredentials = application.defaultCredentials || providersConfig.providers().azure.defaults.account,
+          defaultRegion = application.defaultRegion || providersConfig.providers().azure.defaults.region;
       return {
         stack: '',
         detail: 'frontend',

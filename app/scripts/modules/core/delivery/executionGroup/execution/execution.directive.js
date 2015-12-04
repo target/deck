@@ -6,6 +6,7 @@ require('./execution.less');
 
 module.exports = angular
   .module('spinnaker.core.delivery.group.executionGroup.execution.directive', [
+    require('config'),
     require('../../filter/executionFilter.service.js'),
     require('../../filter/executionFilter.model.js'),
     require('../../../confirmationModal/confirmationModal.service.js'),
@@ -25,9 +26,9 @@ module.exports = angular
     };
   })
   .controller('ExecutionCtrl', function ($scope, $location, $stateParams, $state, urlParser,
-                                         settings, ExecutionFilterModel, executionService, confirmationModalService) {
+                                         apiHostConfig, ExecutionFilterModel, executionService, confirmationModalService) {
 
-    this.pipelinesUrl = [settings.gateUrl, 'pipelines/'].join('/');
+    this.pipelinesUrl = [apiHostConfig.baseUrl(), 'pipelines/'].join('/');
 
     this.showDetails = () => {
       return this.execution.id === $stateParams.executionId &&

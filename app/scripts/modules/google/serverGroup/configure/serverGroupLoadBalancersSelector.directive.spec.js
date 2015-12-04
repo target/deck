@@ -19,7 +19,7 @@ describe('Directive: GCE Load Balancers Selector', function() {
   var selector, element, gceServerGroupConfigurationService, expectedTime;
 
   beforeEach(window.inject(function(_gceServerGroupConfigurationService_, _infrastructureCaches_, _momentService_,
-                               settings, defaultTimeZoneConfig){
+                                defaultTimeZoneConfig){
     gceServerGroupConfigurationService = _gceServerGroupConfigurationService_;
 
 

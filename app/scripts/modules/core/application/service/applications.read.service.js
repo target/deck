@@ -21,7 +21,7 @@ module.exports = angular
   .factory('applicationReader', function ($q, $log, $window,  $rootScope, Restangular, _, clusterService, taskReader,
                                           loadBalancerReader, loadBalancerTransformer, securityGroupReader, scheduler,
                                           pipelineConfigService, rx,
-                                          infrastructureCaches, settings, executionService, serverGroupTransformer) {
+                                          infrastructureCaches, executionService, serverGroupTransformer) {
 
     function listApplications() {
       return Restangular

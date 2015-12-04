@@ -45,7 +45,15 @@ module.exports = angular.module('spinnaker-ui-deployable', [
   alertConfigProvider.setSubject(__ALERTING_SUBJECT__);
   alertConfigProvider.setTemplateName(__ALERTING_TEMPLATE_NAME__);
   alertConfigProvider.setThrottleInSeconds(__ALERTING_THROTTLE_SEC__);
+})
+.config(function(providersConfigProvider) {
+  providersConfigProvider.addProvider('aws', __AWS_PROVIDER_SETTINGS__);
+  providersConfigProvider.addProvider('gce', __GCE_PROVIDER_SETTINGS__);
+  providersConfigProvider.addProvider('azure', __AZURE_PROVIDER_SETTINGS__);
+  providersConfigProvider.addProvider('cf', __CF_PROVIDER_SETTINGS__);
+  providersConfigProvider.addProvider('titan', __TITAN_PROVIDER_SETTINGS__);
 });
+
 
 
 

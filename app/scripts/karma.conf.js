@@ -30,7 +30,6 @@ module.exports = function(config) {
 
     preprocessors: {
       './**/*.spec.js': ['webpack'],
-      'settings.js': ['webpack'],
       './mockApplicationData.js': ['webpack'],
       './test_index.js': ['webpack'],
     },

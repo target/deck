@@ -4,11 +4,12 @@ let angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.pipeline.stage.bake.docker.executionDetails.controller', [
   require('angular-ui-router'),
+  require('config'),
   require('../../../../../delivery/details/executionDetailsSection.service.js'),
   require('../../../../../delivery/details/executionDetailsSectionNav.directive.js'),
 ])
   .controller('dockerBakeExecutionDetailsCtrl', function ($scope, $stateParams, executionDetailsSectionService, $timeout,
-                                                          $interpolate, settings) {
+                                                          $interpolate, apiHostConfig) {
 
     $scope.configSections = ['bakeConfig', 'taskStatus'];
 
@@ -22,7 +23,7 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.bake.docker.execu
         $scope.provider = $scope.stage.context.cloudProviderType || 'docker';
       });
 
-      $scope.bakeryDetailUrl = $interpolate(settings.bakeryDetailUrl);
+      $scope.bakeryDetailUrl = $interpolate(apiHostConfig.bakeryDetailEndpoint());
     }
 
     initialize();

@@ -10,5 +10,5 @@ module.exports = angular
     require('./whatsNew'),
     require('./defaultProviders'),
     require('./alert'),
-    require('./settings'),
+    require('./providers'),
   ]);

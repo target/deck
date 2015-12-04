@@ -9,7 +9,7 @@ module.exports = angular.module('spinnaker.core.pipeline.stage.bake.aws.executio
   require('../../../../../delivery/details/executionDetailsSectionNav.directive.js'),
 ])
   .controller('awsBakeExecutionDetailsCtrl', function ($scope, $stateParams, executionDetailsSectionService, $timeout,
-                                                       $interpolate, settings, apiHostConfig, featureFlagConfig) {
+                                                       $interpolate, apiHostConfig, featureFlagConfig) {
 
     $scope.configSections = ['bakeConfig', 'taskStatus'];
 

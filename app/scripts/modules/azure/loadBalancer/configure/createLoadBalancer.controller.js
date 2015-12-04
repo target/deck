@@ -129,7 +129,7 @@ module.exports = angular.module('spinnaker.azure.loadBalancer.create.controller'
           return availableVpcIds.indexOf(securityGroup.vpcId) !== -1;
         });
         $scope.existingSecurityGroupNames = _.collect($scope.availableSecurityGroups, 'name');
-        // TODO: Move to settings
+        // TODO: Move to providersConfig
         var defaultSecurityGroups = ['nf-datacenter-vpc', 'nf-infrastructure-vpc', 'nf-datacenter', 'nf-infrastructure'];
         var existingNames = defaultSecurityGroups.filter(function(defaultName) {
           return $scope.existingSecurityGroupNames.indexOf(defaultName) !== -1;

@@ -10,14 +10,14 @@ module.exports = angular.module('spinnaker.titan.serverGroupCommandBuilder.servi
   require('../../../core/utils/dataConverter.service.js'),
   require('../../../core/utils/lodash.js'),
 ])
-  .factory('titanServerGroupCommandBuilder', function (settings, Restangular, $q,
+  .factory('titanServerGroupCommandBuilder', function (providersConfig, Restangular, $q,
                                                      accountService, namingService, _, dataConverterService) {
     function buildNewServerGroupCommand(application, defaults) {
       defaults = defaults || {};
 
-      var defaultCredentials = defaults.account || settings.providers.titan.defaults.account;
-      var defaultRegion = defaults.region || settings.providers.titan.defaults.region;
-      var defaultZone = defaults.zone || settings.providers.titan.defaults.zone;
+      var defaultCredentials = defaults.account || providersConfig.providers().titan.defaults.account;
+      var defaultRegion = defaults.region || providersConfig.providers().titan.defaults.region;
+      var defaultZone = defaults.zone || providersConfig.providers().titan.defaults.zone;
 
       var command = {
         application: application.name,

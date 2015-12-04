@@ -20,18 +20,19 @@ describe('Service: awsServerGroup', function () {
 
   beforeEach(
     window.module(
+      require('config'),
       require('./serverGroupCommandBuilder.service.js')
     )
   );
 
   beforeEach(
-    window.inject(function (_$httpBackend_, awsServerGroupCommandBuilder, _accountService_, _instanceTypeService_, _$q_, _settings_, $rootScope) {
+    window.inject(function (_$httpBackend_, awsServerGroupCommandBuilder, _accountService_, _instanceTypeService_, _$q_, $rootScope, _providersConfig_) {
       this.$httpBackend = _$httpBackend_;
       this.service = awsServerGroupCommandBuilder;
       this.accountService = _accountService_;
       this.$q = _$q_;
-      this.settings = _settings_;
       this.$scope = $rootScope;
+      this.providersConfig = _providersConfig_;
       spyOn(_instanceTypeService_, 'getCategoryForInstanceType').and.returnValue(_$q_.when('custom'));
   }));
 
@@ -51,25 +52,13 @@ describe('Service: awsServerGroup', function () {
         }
       };
 
-      this.settings.providers.aws.defaults.account = 'test';
-      this.settings.providers.aws.defaults.region = 'us-east-1';
-
-      this.settings.preferredZonesByAccount = {
-        test: {
-          'us-west-1': ['a', 'b'],
-          'us-east-1': ['d', 'e'],
+      this.providersConfig.addProvider('aws', {
+        defaults: {
+          account: 'test',
+          region: 'us-east-1'
         },
-        prod: {
-          'us-west-1': ['d', 'g'],
-          'us-east-1': ['d', 'e'],
-          'eu-west-1': ['a', 'm']
-        },
-        default: {
-          'us-west-1': ['a', 'c'],
-          'us-east-1': ['d', 'e'],
-          'eu-west-1': ['a', 'm']
-        }
-      };
+        defaultSecurityGroups: ['nf-datacenter-vpc', 'nf-infrastructure-vpc', 'nf-datacenter', 'nf-infrastructure'],
+      });
 
       spyOn(this.accountService, 'getAvailabilityZonesForAccountAndRegion').and.returnValue(
         this.$q.when(['d', 'g'])

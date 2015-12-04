@@ -9,7 +9,7 @@ module.exports = angular
     require('../../../core/application/listExtractor/listExtractor.service'),
     require('../../../core/application/service/applications.read.service.js'),
   ])
-  .factory('fastPropertyScopeBuilderService', (_, appListExtractorService, applicationReader, settings) => {
+  .factory('fastPropertyScopeBuilderService', (_, appListExtractorService, applicationReader, providersConfig) => {
 
     let isSkip = (prop) => prop && prop === 'none';
 
@@ -91,7 +91,7 @@ module.exports = angular
           const valueList = objectValuesToList(ctrl.chosenApps);
           listHolder.region = appListExtractorService.getRegions(valueList).sort();
         } else {
-          let preferredZoneList = settings.providers.aws.preferredZonesByAccount[ctrl.property.env];
+          let preferredZoneList = providersConfig.providers().aws.preferredZonesByAccount[ctrl.property.env];
           listHolder.region = preferredZoneList ? Object.keys(preferredZoneList) : [];
         }
 

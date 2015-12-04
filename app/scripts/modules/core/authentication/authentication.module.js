@@ -3,6 +3,7 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.authentication', [
+  require('config'),
   require('./authentication.service.js'),
   require('./authentication.initializer.service.js'),
   require('./authentication.interceptor.service.js')
@@ -10,8 +11,8 @@ module.exports = angular.module('spinnaker.authentication', [
   .config(function ($httpProvider) {
     $httpProvider.interceptors.push('gateRequestInterceptor');
   })
-  .run(function (authenticationInitializer, settings) {
-    if(settings.authEnabled) {
+  .run(function (authenticationInitializer, apiHostConfig) {
+    if(apiHostConfig.authEnabled()) {
       authenticationInitializer.authenticateUser();
     }
   })

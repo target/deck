@@ -5,12 +5,7 @@ describe('scheduler', function() {
   beforeEach(function() {
     var pollSchedule = 25;
     window.module(
-      require('./scheduler.service.js'),
-      function($provide) {
-        return $provide.constant('settings', {
-          pollSchedule: pollSchedule,
-        });
-      }
+      require('./scheduler.service.js')
     );
 
     this.pollSchedule = pollSchedule;
