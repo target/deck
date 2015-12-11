@@ -111,6 +111,8 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
     'pipeline.config.checkPreconditions.failPipeline': '' +
       '<p><strong>Checked</strong> - the overall pipeline will fail whenever this precondition is false.</p>' +
       '<p><strong>Unchecked</strong> - the overall pipeline will continue executing but this particular branch will stop.</p>',
+    'pipeline.config.checkPreconditions.expression': '<p>Value must evaluate to "true".' +
+      ' Use of the <b>Spring Expression Language</b> within the placeholder ${ } allows for complex evaluations.</p>',
     'pipeline.config.deploy.template': '<p>Select an existing cluster to use as a template for this deployment, and we\'ll pre-fill ' +
       'the configuration based on the newest server group in the cluster.</p>' +
       '<p>If you want to start from scratch, select "None".</p>' +
@@ -220,4 +222,7 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
     'project.cluster.detail': '<p>(Optional field)</p><p>Filters displayed clusters by detail.</p><p>Enter <samp>*</samp> to include all details; leave blank to omit any clusters with a detail.</p>',
     'instanceType.unavailable': '<p>This instance type is not available for the selected configuration.</p>',
     'fastProperty.canary.strategy.rolloutList': '<p>A comma separated list of numbers or percentages of instance canary against.</p>',
+    'execution.forceRebake': '<p>By default, the bakery will <b>not</b> create a new image if the contents of the package have not changed; ' +
+      'instead, it will return the previously baked image.</p>' +
+      '<p>Select this option to force the bakery to create a new image, regardless of whether or not the selected package exists.</p>',
   });

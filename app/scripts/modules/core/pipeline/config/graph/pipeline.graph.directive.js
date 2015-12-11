@@ -158,6 +158,9 @@ module.exports = angular.module('spinnaker.core.pipeline.config.graph.directive'
               node.leaf = node.children.length === 0;
               node.lastPhase = getLastPhase(node);
             });
+            nodes.forEach((node) => {
+              node.lastPhase = getLastPhase(node);
+            });
 
             var grouped = _.groupBy(nodes, 'phase');
 
