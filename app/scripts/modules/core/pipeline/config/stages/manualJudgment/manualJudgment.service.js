@@ -4,10 +4,10 @@ const angular = require('angular');
 
 module.exports = angular
   .module('spinnaker.core.pipeline.stage.manualJudgment.service', [
-    require('../../../../config/settings.js'),
+    require('config'),
     require('../../../../delivery/service/execution.service.js'),
   ])
-  .factory('manualJudgmentService', function($http, $q, settings, executionService) {
+  .factory('manualJudgmentService', function($http, $q, executionService, apiHostConfig) {
 
     let buildMatcher = (stage, judgment, deferred) => {
       return (execution) => {
@@ -21,13 +21,13 @@ module.exports = angular
     };
 
     let provideJudgment = (execution, stage, judgment) => {
-      var targetUrl = [settings.gateUrl, 'pipelines', execution.id, 'stages', stage.id].join('/');
+      var targetUrl = [apiHostConfig.baseUrl(), 'pipelines', execution.id, 'stages', stage.id].join('/');
       var deferred = $q.defer();
       var request = {
         method: 'PATCH',
         url: targetUrl,
         data: {judgmentStatus: judgment},
-        timeout: settings.pollSchedule * 2 + 5000, // TODO: replace with apiHost call
+        timeout: apiHostConfig.getPollSchedule() * 2 + 5000,
       };
 
       $http(request)
@@ -44,4 +44,4 @@ module.exports = angular
     return {
       provideJudgment: provideJudgment
     };
-  }).name;
+  });

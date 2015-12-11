@@ -157,7 +157,7 @@ describe('Service: executionService', function () {
 
     it('resolves when the execution matches the closure', function () {
       let executionId = 'abc',
-          url = [settings.gateUrl, 'pipelines', executionId].join('/'),
+          url = [apiHostConfig.baseUrl(), 'pipelines', executionId].join('/'),
           succeeded = false;
 
       $httpBackend.expectGET(url).respond(200, { thingToMatch: true });
@@ -173,7 +173,7 @@ describe('Service: executionService', function () {
 
     it('polls until the execution matches, then resolves', function () {
       let executionId = 'abc',
-          url = [settings.gateUrl, 'pipelines', executionId].join('/'),
+          url = [apiHostConfig.baseUrl(), 'pipelines', executionId].join('/'),
           succeeded = false;
 
       $httpBackend.expectGET(url).respond(200, { thingToMatch: false });
@@ -203,7 +203,7 @@ describe('Service: executionService', function () {
 
     it('rejects if execution retrieval fails', function () {
       let executionId = 'abc',
-          url = [settings.gateUrl, 'pipelines', executionId].join('/'),
+          url = [apiHostConfig.baseUrl(), 'pipelines', executionId].join('/'),
           succeeded = false,
           failed = false;
 

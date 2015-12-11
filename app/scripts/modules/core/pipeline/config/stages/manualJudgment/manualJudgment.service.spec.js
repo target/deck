@@ -2,31 +2,33 @@
 
 describe('Service: manualJudgment', function () {
 
-  var $scope, service, $http, $q, settings, executionService;
+  var $scope, service, $http, $q, executionService, apiHostConfig;
 
   beforeEach(
     window.module(
+      require('config'),
       require('./manualJudgment.service')
     )
   );
 
   beforeEach(
-    window.inject(function ($rootScope, manualJudgmentService, $httpBackend, _$q_, _settings_,
+    window.inject(function ($rootScope, manualJudgmentService, $httpBackend, _$q_, _apiHostConfig_,
                             _executionService_) {
       $scope = $rootScope.$new();
       service = manualJudgmentService;
       $http = $httpBackend;
+      apiHostConfig = _apiHostConfig_;
       $q = _$q_;
-      settings = _settings_;
       executionService = _executionService_;
     })
   );
 
   describe('provideJudgment', function () {
     beforeEach(function() {
+      apiHostConfig.setHost('spinnaker-api.prod.netflix.net');
       this.execution = { id: 'ex-id' };
       this.stage = { id: 'stage-id' };
-      this.requestUrl = [settings.gateUrl, 'pipelines', this.execution.id, 'stages', this.stage.id].join('/');
+      this.requestUrl = [apiHostConfig.baseUrl(), 'pipelines', this.execution.id, 'stages', this.stage.id].join('/');
     });
 
     it('should resolve when execution status matches request', function () {
