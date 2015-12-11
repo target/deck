@@ -57,14 +57,47 @@ module.exports = angular.module('spinnaker-ui-deployable', [
 
 
 
-
 // setting the window.name to NG_DEFER_BOOTSTRAP! allows us to run this modules config first and then we shim
 // in the loading of the src module after.
 // the windown.name gets reset when the resumeBootstrap function runs.
 window.name = "NG_DEFER_BOOTSTRAP!";
 angular.element(document).ready(() => {
   angular.bootstrap(document, ['spinnaker-ui-deployable']);
-  angular.resumeBootstrap([
-    require('src'),
-  ]);
+
+  let modulesToInclude = [];
+
+  if (__NETFLIX_ENABLED__) {
+    modulesToInclude.push(
+      require('src/modules/netflix')
+    );
+  }
+
+  if (__AMAZON_ENABLED__) {
+    modulesToInclude.push(
+      require('src/modules/amazon')
+    );
+  }
+
+  if (__GOOGLE_ENABLED__) {
+    modulesToInclude.push(
+      require('src/modules/google')
+    );
+  }
+
+  if (__CLOUDFOUNDRY_ENABLED__) {
+    modulesToInclude.push(
+      require('src/modules/cloudfoundry')
+    );
+  }
+
+  if (__TITAN_ENABLED__) {
+    modulesToInclude.push(
+      require('src/modules/titan')
+    );
+  }
+
+
+  modulesToInclude.push( require('src') );
+
+  angular.resumeBootstrap(modulesToInclude);
 });
