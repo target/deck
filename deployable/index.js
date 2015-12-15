@@ -6,7 +6,6 @@ global.$ = global.jQuery = require('jquery');
 
 const angular = require('angular');
 
-require('../.env.js');
 
 module.exports = angular.module('spinnaker-ui-deployable', [
   require('config')
