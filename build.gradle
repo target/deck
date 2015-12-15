@@ -17,6 +17,20 @@ apply plugin: 'nebula.ospackage'
 apply plugin: 'com.moowork.node'
 apply plugin: 'java'
 
+def netflixAccount = "prestaging"
+if (System.getenv('NETFLIX_ACCOUNT')) {
+  netflixAccount = System.getenv('NETFLIX_ACCOUNT')
+}
+
+
+npm_run_build {
+  environment = [
+    "GATE_HOST": "spinnaker-api.${ netflixAccount }.netflix.net",
+    "AUTH_ENDPOINT": "https://spinnaker-api.${ netflixAccount }.netflix.net/auth/info",
+    "PROVIDERS": file("./deployable/providers/${ netflixAccount }.json").getText(),
+  ]
+}
+
 jar {
   dependsOn('webpack')
   from(fileTree("build/webpack")) {
@@ -33,24 +47,9 @@ node {
     download = true
 }
 
-task webpack(type: NodeTask) {
-  workingDir '.'
-  script = file('node_modules/webpack/bin/webpack.js')
-  environment = [
-    "GATE_HOST": "spinnaker-api-prestaging.prod.netflix.net",
-  ]
-}
-
-task karma(type: NodeTask) {
-  script = file('node_modules/karma/bin/karma')
-  args = ["start", "--single-run", "--reporters", "progress,jenkins"]
-}
-
-webpack.outputs.dir file('build/webpack')
-
-webpack.dependsOn 'npmInstall'
-karma.dependsOn 'webpack'
-test.dependsOn 'karma'
+npm_run_build.dependsOn 'npmInstall'
+npm_test.dependsOn npm_run_build
+test.dependsOn npm_test
 buildDeb.dependsOn 'test'
 
 String toVers(String v) {

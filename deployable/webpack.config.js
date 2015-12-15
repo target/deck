@@ -46,6 +46,7 @@ definitions.__GCE_PROVIDER_SETTINGS__ = process.env.GCE_PROVIDER_SETTINGS || gce
 definitions.__AZURE_PROVIDER_SETTINGS__ = process.env.AZURE_PROVIDER_SETTINGS || azureConfig;
 definitions.__TITAN_PROVIDER_SETTINGS__ = process.env.TITAN_PROVIDER_SETTINGS || titanConfig;
 definitions.__CF_PROVIDER_SETTINGS__ = process.env.CF_PROVIDER_SETTINGS || cfConfig;
+definitions.__PROVIDERS__ = process.env.PROVIDERS || "{}";
 
 var alias = sharedConfig.sharedAliases;
 alias['src'] = path.join(__dirname, '..', 'app', 'scripts');
