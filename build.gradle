@@ -12,7 +12,6 @@ buildscript {
 
 group = "com.netflix.spinnaker.deck"
 
-apply plugin: "spinnaker.project"
 apply plugin: "netflix.ospackage"
 apply plugin: "com.moowork.node"
 apply plugin: "java"
