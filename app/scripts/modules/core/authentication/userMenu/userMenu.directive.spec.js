@@ -1,18 +1,19 @@
 'use strict';
 
 describe('Directives: userMenu', function () {
-  var $scope, $compile, settings, authenticationService;
+  var $scope, $compile, apiHostConfig, authenticationService;
 
   require('./userMenu.directive.html');
   beforeEach(window.module(
+    require('config'),
     require('./userMenu.directive.js')
   ));
 
   beforeEach(
-    window.inject(function ($rootScope, _$compile_, _settings_, _authenticationService_) {
+    window.inject(function ($rootScope, _$compile_, _authenticationService_, _apiHostConfig_) {
       $scope = $rootScope.$new();
       $compile = _$compile_;
-      settings = _settings_;
+      apiHostConfig = _apiHostConfig_;
       authenticationService = _authenticationService_;
     })
   );
@@ -32,7 +33,7 @@ describe('Directives: userMenu', function () {
     it('displays nothing when auth is not enabled', function () {
       var domNode;
 
-      settings.authEnabled = false;
+      apiHostConfig.disableAuth()
       domNode = createUserMenu($scope);
 
       expect(domNode.size()).toBe(0);
@@ -41,7 +42,7 @@ describe('Directives: userMenu', function () {
     it('displays the user menu when auth is enabled', function () {
       var domNode, templateElement;
 
-      settings.authEnabled = true;
+      apiHostConfig.enableAuth();
       spyOn(authenticationService, 'getAuthenticatedUser').and.returnValue({'name': 'sam mulligan'});
       domNode = createUserMenu($scope);
 
@@ -51,7 +52,7 @@ describe('Directives: userMenu', function () {
     it('displays the user name for both large and small screens', function () {
       var domNode, templateElement;
 
-      settings.authEnabled = true;
+      apiHostConfig.enableAuth();
       spyOn(authenticationService, 'getAuthenticatedUser').and.returnValue({'name': 'sam mulligan'});
       domNode = createUserMenu($scope);
 

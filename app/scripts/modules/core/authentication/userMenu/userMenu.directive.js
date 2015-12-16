@@ -3,17 +3,18 @@
 let angular = require('angular');
 
 module.exports = angular.module('spinnaker.core.authentication.userMenu.directive', [
-  require('../../config/settings.js'),
+  require('config'),
+  //require('../../config/settings.js'),
   require('../authentication.service.js'),
 ])
-  .directive('userMenu', function(settings, authenticationService) {
+  .directive('userMenu', function(apiHostConfig, authenticationService) {
     return {
       restrict: 'E',
       replace: true,
       templateUrl: require('./userMenu.directive.html'),
       link: function(scope) {
-        scope.authEnabled = settings.authEnabled;
+        scope.authEnabled = apiHostConfig.authEnabled();
         scope.user = authenticationService.getAuthenticatedUser();
       }
     };
-  }).name;
+  });
