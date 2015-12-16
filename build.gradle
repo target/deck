@@ -12,7 +12,7 @@ buildscript {
 
 publishing {
   publications {
-    deb(MavenPublication)
+    deb(MavenPublication) {
       artifact buildDeb
     }
   }
