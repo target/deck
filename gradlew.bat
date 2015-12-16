@@ -8,6 +8,13 @@
 @rem Set local scope for the variables with windows NT shell
 if "%OS%"=="Windows_NT" setlocal
 
+@rem Netflix: Attempt to use $WORKSPACE/.gradle if we're not told otherwise 
+if "%GRADLE_USER_HOME%"=="" (
+    if NOT "%WORKSPACE%"=="" (
+        set GRADLE_USER_HOME=%WORKSPACE%\.gradle
+    )
+)
+
 @rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
 set DEFAULT_JVM_OPTS=
 

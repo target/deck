@@ -4,24 +4,22 @@ buildscript {
     maven { url "http://dl.bintray.com/spinnaker/gradle" }
   }
   dependencies {
-    classpath 'com.netflix.spinnaker.gradle:spinnaker-gradle-project:3.1.0'
-    classpath 'com.moowork.gradle:gradle-node-plugin:0.8'
-    classpath 'be.filipblondeel.gradle:gradle-gulp-plugin:0.1'
+    classpath "com.netflix.spinnaker.gradle:spinnaker-gradle-project:3.1.0"
+    classpath "com.moowork.gradle:gradle-node-plugin:0.8"
+    classpath "be.filipblondeel.gradle:gradle-gulp-plugin:0.1"
   }
 }
 
 group = "com.netflix.spinnaker.deck"
 
-apply plugin: 'spinnaker.project'
-apply plugin: 'nebula.ospackage'
-apply plugin: 'com.moowork.node'
-apply plugin: 'java'
+apply plugin: "netflix.ospackage"
+apply plugin: "com.moowork.node"
+apply plugin: "java"
 
 def netflixAccount = "prestaging"
-if (System.getenv('NETFLIX_ACCOUNT')) {
-  netflixAccount = System.getenv('NETFLIX_ACCOUNT')
+if (System.getenv("NETFLIX_ACCOUNT")) {
+  netflixAccount = System.getenv("NETFLIX_ACCOUNT")
 }
-
 
 npm_run_build {
   environment = [
@@ -31,29 +29,24 @@ npm_run_build {
   ]
 }
 
-jar {
-  dependsOn('webpack')
-  from(fileTree("build/webpack")) {
-    into "META-INF/resources"
-  }
-}
-
 node {
-    // Version of node to use.
-    version = '0.12.3'
-    npmVersion = '2.8.3'
-
-    // Enabled the automatic download. False is the default (for now).
+    version = "0.12.3"
+    npmVersion = "2.8.3"
     download = true
 }
 
-npm_run_build.dependsOn 'npmInstall'
+task copyToWebRoot(type: Copy) {
+  from "build/webpack"
+  into "/var/www"
+}
+
+npm_run_build.dependsOn "npmInstall"
+copyToWebRoot.dependsOn npm_run_build
 npm_test.dependsOn npm_run_build
 test.dependsOn npm_test
-buildDeb.dependsOn 'test'
 
 String toVers(String v) {
-  int idx = v.indexOf('-')
+  int idx = v.indexOf("-")
   if (idx != -1) {
     return v.substring(0, idx)
   }
@@ -61,10 +54,12 @@ String toVers(String v) {
 }
 
 ospackage {
-  packageName = "spinnaker-deck"
+  packageName = "spinnaker-deck-new-deployable"
   version = toVers(project.version.toString())
-  release '3'
-  into "/var/www"
+  release "3"
+  into "/apps/deck"
   requires "apache2"
-  from "build/webpack"
+  from "."
+  requires "prana-release"
+  postInstall "./gradlew buildStatic"
 }
