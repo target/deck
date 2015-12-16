@@ -10,6 +10,14 @@ buildscript {
   }
 }
 
+publishing {
+  publications {
+    deb(MavenPublication)
+      artifact buildDeb
+    }
+  }
+}
+
 group = "com.netflix.spinnaker.deck"
 
 apply plugin: "spinnaker.project"
