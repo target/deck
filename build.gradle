@@ -31,7 +31,7 @@ npm_run_build {
 }
 
 jar {
-  dependsOn("webpack")
+  dependsOn(npm_run_build)
   from(fileTree("build/webpack")) {
     into "META-INF/resources"
   }
