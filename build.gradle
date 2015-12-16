@@ -10,20 +10,20 @@ buildscript {
   }
 }
 
-publishing {
-  publications {
-    mavenDeb(MavenPublication) {
-      artifact buildDeb
-    }
-  }
-}
-
 group = "com.netflix.spinnaker.deck"
 
 apply plugin: "spinnaker.project"
 apply plugin: "nebula.ospackage"
 apply plugin: "com.moowork.node"
 apply plugin: "java"
+
+publishing {
+  publications {
+    mavenDeb(MavenPublication) {
+      artifact buildDeb
+    }
+  }
+}
 
 def netflixAccount = "prestaging"
 if (System.getenv("NETFLIX_ACCOUNT")) {
