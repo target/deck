@@ -43,8 +43,13 @@ node {
     download = true
 }
 
+task copyToWebRoot(type: Copy) {
+  from "build/webpack"
+  into "/var/www"
+}
+
 npm_run_build.dependsOn "npmInstall"
-buildStatic.dependsOn npm_run_build
+copyToWebRoot.dependsOn npm_run_build
 npm_test.dependsOn npm_run_build
 test.dependsOn npm_test
 
@@ -54,11 +59,6 @@ String toVers(String v) {
     return v.substring(0, idx)
   }
   return v
-}
-
-task buildStatic {
-  from "build/webpack"
-  into "/var/www"
 }
 
 ospackage {
