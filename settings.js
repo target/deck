@@ -1,7 +1,7 @@
 'use strict';
 
 var feedbackUrl = process.env.FEEDBACK_URL || 'http://hootch.test.netflix.net/submit';
-var gateHost = process.env.API_HOST || 'https://spinnaker-api-prestaging.prod.netflix.net';
+var gateHost = process.env.API_HOST || 'https://spinnaker-api.prod.netflix.net';
 var bakeryDetailUrl = process.env.BAKERY_DETAIL_URL || 'http://bakery.test.netflix.net/#/?region={{context.region}}&package={{context.package}}&detail=bake:{{context.status.resourceId}}';
 var authEndpoint = process.env.AUTH_ENDPOINT || 'https://spinnaker-api-prestaging.prod.netflix.net/auth/info';
 
@@ -82,7 +82,7 @@ window.spinnakerSettings = {
     vpcMigrator: true,
     clusterDiff: true,
     roscoMode: false,
-    netflixMode: false,
+    netflixMode: true,
     // whether stages affecting infrastructure (like "Create Load Balancer") should be enabled or not
     infrastructureStages: process.env.INFRA_STAGES === 'enabled',
   },

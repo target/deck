@@ -1,0 +1,27 @@
+<span class="counter instance-health-counts" ng-if="healthPercent !== 'n/a'" uib-tooltip-html="legend" [attr.tooltip-placement]=legendPlacement>
+  <span *ngIf="container.up">
+    {{ container.up }} <span class="glyphicon glyphicon-Up-triangle healthy"></span>
+  </span>
+  <span *ngIf="container.down && container.down !== container.missingHealthCount">
+    <span *ngIf="container.up">/</span>
+    {{ container.down }} <span class="glyphicon glyphicon-Down-triangle dead"></span>
+  </span>
+  <span *ngIf="container.unknown">
+    <span *ngIf="container.up || container.down">/</span>
+    {{ container.unknown }} <span class="glyphicon glyphicon-Unknown-triangle unknown"></span>
+  </span>
+  <span *ngIf="container.outOfService">
+    <span *ngIf="container.up || container.down || container.unknown">/</span>
+    {{ container.outOfService }} <span class="glyphicon glyphicon-OutOfService-triangle disabled small"></span>
+  </span>
+  <span *ngIf="container.unknown !== container.total">
+  : <span class="{{healthStatus}}">
+      {{healthPercent}}{{healthPercentLabel}}
+    </span>
+  </span>
+</span>
+<span class="counter instance-health-counts" *ngIf="container.outOfService && healthPercent === 'n/a'" uib-tooltip-html="legend">
+  <span *ngIf="container.outOfService">
+    {{ container.outOfService }} <span class="glyphicon glyphicon-minus disabled small"></span>
+  </span>
+</span>

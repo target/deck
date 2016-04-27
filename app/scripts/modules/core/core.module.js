@@ -66,7 +66,7 @@ module.exports = angular
 
     require('./forms/forms.module.js'),
 
-    require('./healthCounts/healthCounts.directive.js'),
+    require('./healthCounts'),
     require('./help/help.module.js'),
     require('./history/recentHistory.service.js'),
 
