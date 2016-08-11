@@ -9,10 +9,12 @@ module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service
   require('../../../core/naming/naming.service.js'),
   require('../../../core/utils/lodash.js'),
   require('./../../instance/custom/customInstanceBuilder.gce.service.js'),
+  require('./wizard/hiddenMetadataKeys.value.js'),
 ])
   .factory('gceServerGroupCommandBuilder', function (settings, $q,
                                                      accountService, instanceTypeService, namingService, _,
-                                                     gceCustomInstanceBuilderService) {
+                                                     gceCustomInstanceBuilderService,
+                                                     gceServerGroupHiddenMetadataKeys) {
 
     // Two assumptions here:
     //   1) All GCE machine types are represented in the tree of choices.
@@ -151,22 +153,16 @@ module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service
     }
 
     function populateCustomMetadata(metadataItems, command) {
-      // Hide metadata items with these keys in the wizard.
-      let hiddenMetadataKeys = [
-        'load-balancer-names',
-        'global-load-balancer-names',
-        'backend-service-names'
-      ];
-
+      // Hide metadata items in the wizard.
       if (metadataItems) {
         if (angular.isArray(metadataItems)) {
           metadataItems.forEach(function (metadataItem) {
-            if (!_.contains(hiddenMetadataKeys, metadataItem.key)) {
+            if (!_.contains(gceServerGroupHiddenMetadataKeys, metadataItem.key)) {
               command.instanceMetadata[metadataItem.key] = metadataItem.value;
             }
           });
         } else {
-          angular.extend(command.instanceMetadata, _.omit(metadataItems, hiddenMetadataKeys));
+          angular.extend(command.instanceMetadata, _.omit(metadataItems, gceServerGroupHiddenMetadataKeys));
         }
       }
     }
@@ -217,6 +213,7 @@ module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service
 
       var command = {
         application: application.name,
+        autoscalingPolicy: {},
         credentials: defaultCredentials,
         region: defaultRegion,
         zone: defaultZone,
@@ -228,6 +225,7 @@ module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service
           max: 0,
           desired: 1
         },
+        backendServiceMetadata: [],
         persistentDiskType: 'pd-ssd',
         persistentDiskSizeGb: 10,
         localSSDCount: 1,
@@ -243,6 +241,7 @@ module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service
           'logging.write',
           'monitoring.write',
         ],
+        enableTraffic: true,
         cloudProvider: 'gce',
         selectedProvider: 'gce',
         availabilityZones: [],
@@ -282,11 +281,14 @@ module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service
 
       var command = {
         application: application.name,
+        autoscalingPolicy: serverGroup.autoscalingPolicy || {},
         strategy: '',
         stack: serverGroupName.stack,
         freeFormDetails: serverGroupName.freeFormDetails,
         credentials: serverGroup.account,
         loadBalancers: extractLoadBalancers(serverGroup.asg),
+        loadBalancingPolicy: _.cloneDeep(serverGroup.loadBalancingPolicy),
+        backendServiceMetadata: serverGroup.asg['backend-service-names'],
         securityGroups: serverGroup.securityGroups,
         region: serverGroup.region,
         capacity: {
@@ -300,6 +302,7 @@ module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service
         instanceMetadata: {},
         tags: [],
         availabilityZones: [],
+        enableTraffic: true,
         cloudProvider: 'gce',
         selectedProvider: 'gce',
         source: {
@@ -379,6 +382,7 @@ module.exports = angular.module('spinnaker.gce.serverGroupCommandBuilder.service
         var viewOverrides = {
           region: region,
           credentials: pipelineCluster.account,
+          enableTraffic: !pipelineCluster.disableTraffic,
           viewState: viewState,
         };
 

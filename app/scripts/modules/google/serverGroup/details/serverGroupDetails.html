@@ -130,8 +130,6 @@
           ng-if="ctrl.serverGroup.asg.minSize !== ctrl.serverGroup.asg.maxSize">
         <dt>Min</dt>
         <dd>{{ctrl.serverGroup.asg.minSize}}</dd>
-        <dt>Desired</dt>
-        <dd>{{ctrl.serverGroup.asg.desiredCapacity}}</dd>
         <dt>Max</dt>
         <dd>{{ctrl.serverGroup.asg.maxSize}}</dd>
         <dt>Current</dt>
@@ -185,16 +183,16 @@
       </ul>
     </collapsible-section>
     <collapsible-section heading="Autoscaling">
-      <gce-add-scaling-policy-button ng-if="!ctrl.serverGroup.autoscalingPolicy"
+      <gce-add-autoscaling-policy-button ng-if="!ctrl.serverGroup.autoscalingPolicy"
                                      server-group="ctrl.serverGroup"
                                      application="ctrl.application">
-      </gce-add-scaling-policy-button>
-      <gce-scaling-policy ng-repeat="policy in [ctrl.serverGroup.autoscalingPolicy]"
+      </gce-add-autoscaling-policy-button>
+      <gce-autoscaling-policy ng-repeat="policy in [ctrl.serverGroup.autoscalingPolicy]"
                           ng-if="ctrl.serverGroup.autoscalingPolicy"
                           application="ctrl.application"
                           server-group="ctrl.serverGroup"
                           policy="policy">
-      </gce-scaling-policy>
+      </gce-autoscaling-policy>
     </collapsible-section>
     <collapsible-section heading="AutoHealing" ng-if="ctrl.serverGroup.autoHealingPolicyHealthCheck">
       <p>AutoHealing can be configured via the Developers Console.</p>
@@ -265,6 +263,31 @@
         <dd>{{ctrl.serverGroup.buildInfo.version}}</dd>
         <dt ng-if="ctrl.serverGroup.buildInfo.jenkins">Build Link</dt>
         <dd ng-if="ctrl.serverGroup.buildInfo.jenkins"><a target=_blank href="{{ctrl.buildJenkinsLink()}}">{{ctrl.buildJenkinsLink()}}</a></dd>
+      </dl>
+    </collapsible-section>
+    <collapsible-section heading="Port Name Mapping">
+      <dl ng-class="ctrl.InsightFilterStateModel.filtersExpanded ? '' : 'dl-horizontal dl-wide'"
+          ng-if="ctrl.serverGroup.loadBalancingPolicy.listeningPort">
+        <dd>http &rarr; {{ ctrl.serverGroup.loadBalancingPolicy.listeningPort }}</dd>
+      </dl>
+    </collapsible-section>
+    <collapsible-section heading="Capacity Metrics">
+      <dl ng-class="ctrl.InsightFilterStateModel.filtersExpanded ? '' : 'dl-horizontal dl-wide'"
+          ng-if="ctrl.serverGroup.loadBalancingPolicy.listeningPort">
+        <dt>Balancing Mode</dt>
+        <dd>{{ctrl.serverGroup.loadBalancingPolicy.balancingMode}}</dd>
+        <dt ng-if="ctrl.serverGroup.loadBalancingPolicy.maxRatePerInstance">Max RPS per instance</dt>
+        <dd ng-if="ctrl.serverGroup.loadBalancingPolicy.maxRatePerInstance">
+          {{ctrl.serverGroup.loadBalancingPolicy.maxRatePerInstance}}
+        </dd>
+        <dt ng-if="ctrl.serverGroup.loadBalancingPolicy.maxUtilization">Max CPU Utilization</dt>
+        <dd ng-if="ctrl.serverGroup.loadBalancingPolicy.maxUtilization">
+          {{ctrl.serverGroup.loadBalancingPolicy.maxUtilization | decimalToPercent}}
+        </dd>
+        <dt ng-if="ctrl.serverGroup.loadBalancingPolicy.capacityScaler">Capacity</dt>
+        <dd ng-if="ctrl.serverGroup.loadBalancingPolicy.capacityScaler">
+          {{ctrl.serverGroup.loadBalancingPolicy.capacityScaler | decimalToPercent}}
+        </dd>
       </dl>
     </collapsible-section>
     <collapsible-section heading="Logs">

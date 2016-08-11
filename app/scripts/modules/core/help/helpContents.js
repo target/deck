@@ -8,6 +8,7 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
       'determine task completion. When this option is disabled, tasks will normally need health status reported by some other health provider (e.g. a ' +
       'load balancer or discovery service) to determine task completion.',
     'application.showPlatformHealthOverride': 'When this option is enabled, users will be able to toggle the option above on a task-by-task basis.',
+    'core.serverGroup.strategy': 'The deployment strategy tells Spinnaker what to do with the previous version of the server group.',
     'aws.associateElasticIp.elasticIp': '<p>(Optional) <b>Elastic IP</b> is an IP address that Spinnaker will associate with this cluster.' +
       '<p>If specified, this elastic IP must exist and not already be attached to an instance or cluster.</p>' +
       '<p>If left blank, Spinnaker will make a selection from the list of available elastic IPs in the provided account and region.</p>',
@@ -46,7 +47,6 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
     'aws.serverGroup.tags': '(Optional) <b>Tags</b> are propagated to the instances in this cluster.',
     'aws.serverGroup.allImages': 'Search for an image that does not match the name of your application.',
     'aws.serverGroup.filterImages': 'Select from a pre-filtered list of images matching the name of your application.',
-    'aws.serverGroup.strategy': 'The deployment strategy tells Spinnaker what to do with the previous version of the server group.',
     'aws.serverGroup.traffic': 'Enables the "AddToLoadBalancer" scaling process, which is used by Spinnaker and ' +
     ' discovery services to determine if the server group is enabled.',
     'aws.securityGroup.vpc': '<p>The VPC to which this security group will apply.</p>' +
@@ -109,6 +109,7 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
     'gce.instance.customMetadata.load-balancer-names': 'This field is used to "remember" what load balancers this instance is associated with, even if it is deregistered.',
     'gce.instance.customMetadata.global-load-balancer-names': 'This field is used to "remember" what global load balancers this instance is associated with, even if it is deregistered.',
     'gce.instance.customMetadata.backend-service-names': 'This field is used to "remember" what backend services this instance is associated with, even if it is deregistered.',
+    'gce.instance.customMetadata.load-balancing-policy': 'This field is used to "remember" the load balancing policy this instance is associated with, even if it is deregistered.',
     'gce.instance.customMetadata.startup-script': 'This script will run automatically on every boot.',
     'gce.instance.storage': '<p>Storage options can be fully-configured on the <b>Advanced Settings</b> tab. These are just default settings. Please be aware of your Local SSD quotas as you provision VMs.</p>',
     'gce.instance.storage.localSSD': '<p>Local SSD disks are always 375GB. All non shared-core instance types support attaching up to 4 Local SSD disks. Please be aware of your Local SSD quotas as you provision VMs.</p>',
@@ -132,6 +133,7 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
     'gce.serverGroup.customMetadata.load-balancer-names': 'This field is used to "remember" what load balancers this server group is associated with, even if the instances are deregistered.',
     'gce.serverGroup.customMetadata.global-load-balancer-names': 'This field is used to "remember" what global load balancers this server group is associated with, even if the instances are deregistered.',
     'gce.serverGroup.customMetadata.backend-service-names': 'This field is used to "remember" what backend services this server group is associated with, even if the instances are deregistered.',
+    'gce.serverGroup.customMetadata.load-balancing-policy': 'This field is used to "remember" the load balancing policy this server group is associated with, even if the instances are deregistered.',
     'gce.serverGroup.customMetadata.startup-script': 'This script will run automatically on every boot.',
     'gce.serverGroup.preemptibility': 'A preemptible VM costs much less, but lasts only 24 hours. It can be terminated sooner due to system demands.',
     'gce.serverGroup.automaticRestart': 'Compute Engine can automatically restart VM instances if they are terminated for non-user-initiated reasons (maintenance event, hardware failure, software failure, etc.).',
@@ -151,8 +153,15 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
       '<li><b>Auto Subnet Network</b>: Server groups will be automatically assigned to the specified region\'s subnet.</li>' +
       '<li><b>Custom Subnet Network</b>: A subnet must be selected for the server group. If no subnets have been created for the specified region, you will not be able to provision the server group.</li>' +
       '</ul>',
-    'gce.serverGroup.loadBalancingPolicy.maxRatePerInstance': 'The max requests per second that a single backend instance can handle. This is used to calculate the capacity of the group.',
-    'gce.serverGroup.loadBalancingPolicy.maxUtilization': 'This ratio defines the CPU utilization target for the group.',
+    'gce.serverGroup.loadBalancingPolicy.balancingMode': 'Tells the load balancer when the backend is at capacity. If a backend is at capacity, new requests are routed to the nearest region that can handle requests. The balancing mode can be based on CPU utilization or requests per second (RPS).',
+    'gce.serverGroup.loadBalancingPolicy.maxRatePerInstance': 'The maximum number of requests per second that can be sent to the backend instance group. Input must be a number greater than zero.',
+    'gce.serverGroup.loadBalancingPolicy.maxUtilization': 'The maximum CPU utilization allowed for the backend. CPU utilization is calculated by averaging CPU use across all instances in the backend instance group. Input must be a number between 0 and 100.',
+    'gce.serverGroup.loadBalancingPolicy.capacityScaler': `
+      An additional control to manage your maximum CPU utilization or RPS.
+      If you want your instances to operate at a max 80% CPU utilization, set your balancing mode to 80% max CPU utilization and your capacity to 100%.
+      If you want to cut instance utilization by half, set your balancing mode to 80% max CPU utilization and your capacity to 50%. Input must be a number between 0 and 100.`,
+    'gce.serverGroup.loadBalancingPolicy.listeningPort': 'A load balancer sends traffic to an instance group through a named port. Input must be a port number (i.e., between 1 and 65535).',
+    'gce.serverGroup.traffic': 'Registers the server group with any associated load balancers. These registrations are used by Spinnaker to determine if the server group is enabled.',
     'pipeline.config.optionalStage': '' +
       '<p>When this option is enabled, stage will only execute when the supplied expression evaluates true.</p>' +
       '<p>The expression <em>does not</em> need to be wrapped in ${ and }.</p>',
@@ -202,6 +211,9 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
     'pipeline.config.manualJudgment.failPipeline': '' +
       '<p><strong>Checked</strong> - the overall pipeline will fail whenever the manual judgment is negative.</p>' +
       '<p><strong>Unchecked</strong> - the overall pipeline will continue executing but this particular branch will stop.</p>',
+    'pipeline.config.manualJudgment.propagateAuthentication': '' +
+    '<p><strong>Checked</strong> - the pipeline will continue with the permissions of the approver.</p>' +
+    '<p><strong>Unchecked</strong> - the pipeline will continue with it\'s current permissions.</p>',
     'pipeline.config.manualJudgment.judgmentInputs': '<p>(Optional) Entries populate a dropdown displayed when ' +
       'performing a manual judgment.</p>' +
       '<p>The selected value can be used in a subsequent <strong>Check Preconditions</strong> stage to determine branching.</p>' +
@@ -244,6 +256,8 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
     'pipeline.config.canary.baselineVersion': '<p>The Canary stage will inspect the specified cluster to determine which version to deploy as the baseline in each cluster pair.</p>',
     'pipeline.config.canary.lookback':'<p>By default ACA will look at the entire duration of the canary for its analysis. Setting a look-back duration limits the number of minutes that the canary will use for it\'s analysis report.<br> <b>Useful for long running canaries that span multiple days.</b></p>',
     'pipeline.config.canary.continueOnUnhealthy':'<p>Continue the pipeline if the ACA comes back as <b>UNHEALTHY</b></p>',
+    'pipeline.config.canary.watchers': '<p>Comma separated list of emails to receive notifications of canary events.</p>',
+    'pipeline.config.canary.useGlobalDataset': '<p>Uses the global atlas dataset instead of the region specific dataset for ACA</p>',
 
     'pipeline.config.cron.expression': '<strong>Format (Year is optional)</strong><p><samp>Seconds  Minutes  Hour  DayOfMonth  Month  DayOfWeek  (Year)</samp></p>' +
     '<p><strong>Example: every 30 minutes</strong></p><samp>0 0/30 * * * ?</samp>' +
