@@ -2,31 +2,32 @@
 
 let angular = require('angular');
 
-module.exports = angular.module('spinnaker.cf.serverGroup.details.resize.controller', [
+module.exports = angular.module('spinnaker.openstack.serverGroup.details.resize.controller', [
   require('../../../../core/application/modal/platformHealthOverride.directive.js'),
   require('../../../../core/serverGroup/serverGroup.write.service.js'),
   require('../../../../core/task/monitor/taskMonitorService.js')
 ])
-  .controller('cfResizeServerGroupCtrl', function($scope, $uibModalInstance, serverGroupWriter, taskMonitorService,
+  .controller('openstackResizeServerGroupCtrl', function($scope, $uibModalInstance, serverGroupWriter, taskMonitorService,
                                                    application, serverGroup) {
 
     // TODO: Rip out min/max and just use desired capacity.
     $scope.serverGroup = serverGroup;
+    console.log(serverGroup);
     $scope.currentSize = {
-      min: serverGroup.asg.minSize,
-      max: serverGroup.asg.maxSize,
-      desired: serverGroup.asg.desiredCapacity,
+      min: serverGroup.scalingConfig.min,
+      max: serverGroup.scalingConfig.max,
+      desired: serverGroup.scalingConfig.desiredSize,
       newSize: null
     };
 
     $scope.verification = {};
 
     $scope.command = angular.copy($scope.currentSize);
-    $scope.command.advancedMode = serverGroup.asg.minSize !== serverGroup.asg.maxSize;
+    $scope.command.advancedMode = serverGroup.scalingConfig.min !== serverGroup.scalingConfig.max;
 
     if (application && application.attributes) {
       if (application.attributes.platformHealthOnly) {
-        $scope.command.interestingHealthProviderNames = ['Cloud Foundry'];
+        $scope.command.interestingHealthProviderNames = ['OpenStack'];
       }
 
       $scope.command.platformHealthOnlyShowOverride = application.attributes.platformHealthOnlyShowOverride;

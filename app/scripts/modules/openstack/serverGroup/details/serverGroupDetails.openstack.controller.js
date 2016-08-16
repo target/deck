@@ -255,14 +255,14 @@ module.exports = angular.module('spinnaker.serverGroup.details.openstack.control
     };
 
     this.resizeServerGroup = () => {
-  $uibModal.open({
-      templateUrl: require('./resize/resizeServerGroup.html'),
-      controller: 'openstackResizeServerGroupCtrl as ctrl',
-        resolve: {
-          serverGroup: () => this.serverGroup,
-          application: () => app
-        }
-      });
+      $uibModal.open({
+        templateUrl: require('./resize/resizeServerGroup.html'),
+        controller: 'openstackResizeServerGroupCtrl as ctrl',
+          resolve: {
+            serverGroup: () => this.serverGroup,
+            application: () => app
+          }
+        });
     };
 
     this.cloneServerGroup = (serverGroup) => {

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: cfResizeServerGroupCtrl', function () {
+describe('Controller: openstackResizeServerGroupCtrl', function () {
 
   //NOTE: This is only testing the controllers dependencies. Please add more tests.
 
@@ -16,7 +16,7 @@ describe('Controller: cfResizeServerGroupCtrl', function () {
   beforeEach(
     window.inject(function ($rootScope, $controller) {
       scope = $rootScope.$new();
-      controller = $controller('cfResizeServerGroupCtrl', {
+      controller = $controller('openstackResizeServerGroupCtrl', {
         $scope: scope,
         $uibModalInstance: {},
         application: {},

@@ -1,6 +1,6 @@
 <div modal-page>
   <task-monitor monitor="taskMonitor"></task-monitor>
-  <form role="form">
+  <form role="form" name="resizeForm">
     <modal-close></modal-close>
     <div class="modal-header">
       <h3>Resize {{serverGroup.name}}</h3>
@@ -81,7 +81,7 @@
               <input type="number"
                      class="form-control input-sm highlight-pristine"
                      ng-model="command.newSize"
-                     min="0"
+                     min="1"
                      required
                      style="width: 60px"/>
               instances
@@ -92,7 +92,7 @@
       <div class="row" ng-if="command.platformHealthOnlyShowOverride">
         <div class="col-sm-10 col-sm-offset-1">
           <platform-health-override command="command"
-                                    platform-health-type="'Cloud Foundry'"
+                                    platform-health-type="'OpenStack'"
                                     show-help-details="true">
           </platform-health-override>
         </div>
@@ -100,12 +100,12 @@
     </div>
     <div class="modal-footer">
       <user-verification account="serverGroup.account" verification="verification"></user-verification>
-      <button type="submit" ng-click="ctrl.resize()" style="display:none"></button> <!-- Allows form submission via enter keypress-->
+      <button ng-disabled="resizeForm.$invalid" type="submit" ng-click="ctrl.resize()" style="display:none"></button> <!-- Allows form submission via enter keypress-->
       <button class="btn btn-default" ng-click="ctrl.cancel()">Cancel</button>
       <button type="submit"
+              ng-disabled="resizeForm.$invalid"
               class="btn btn-primary"
-              ng-click="ctrl.resize()"
-              ng-disabled="!ctrl.isValid()">
+              ng-click="ctrl.resize()">
         Submit
       </button>
     </div>
