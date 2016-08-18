@@ -26,10 +26,9 @@ module.exports = angular.module('spinnaker.serverGroup.details.openstack.control
   .controller('openstackServerGroupDetailsCtrl', function ($scope, $state, app, serverGroup, InsightFilterStateModel,
                                                      serverGroupReader, openstackServerGroupCommandBuilder, $uibModal,
                                                      confirmationModalService, _, serverGroupWriter, subnetReader,
-                                                     securityGroupReader, loadBalancerReader,
-                                                     runningExecutionsService,
-                                                     accountService,
-                                                     serverGroupWarningMessageService) {
+                                                     securityGroupReader, loadBalancerReader, runningExecutionsService,
+                                                     accountService, serverGroupWarningMessageService,
+                                                     openstackServerGroupTransformer) {
     var ctrl = this;
     this.state = {
       loading: true
@@ -80,12 +79,17 @@ module.exports = angular.module('spinnaker.serverGroup.details.openstack.control
             .then((details) => {
               cancelLoader();
 
-              var plainDetails = details;
-              angular.extend(plainDetails, summary);
-              // it's possible the summary was not found because the clusters are still loading
-              plainDetails.account = serverGroup.accountId;
 
-              this.serverGroup = plainDetails;
+              angular.extend(details, summary);
+
+              // it's possible the summary was not found because the clusters are still loading
+              if (!details.account) {
+                details.account = serverGroup.accountId;
+              }
+
+              openstackServerGroupTransformer.normalizeServerGroup(details);
+
+              this.serverGroup = details;
               this.applyAccountDetails(this.serverGroup);
               this.applySubnetDetails();
               this.applySecurityGroupDetails(this.serverGroup);
@@ -269,8 +273,7 @@ module.exports = angular.module('spinnaker.serverGroup.details.openstack.control
       $uibModal.open({
         templateUrl: require('../configure/wizard/serverGroupWizard.html'),
         controller: 'openstackCloneServerGroupCtrl as ctrl',
-//Not sure if this is needed... will verify when working on edit actions
-//        size: 'lg',
+        size: 'lg',
         resolve: {
           title: () => 'Clone ' + serverGroup.name,
           application: () => app,
@@ -315,6 +318,7 @@ module.exports = angular.module('spinnaker.serverGroup.details.openstack.control
         var accountIndex = allSecurityGroups[serverGroup.account] || {};
         var regionSecurityGroups = accountIndex[serverGroup.region] || {};
         $scope.securityGroups = _.map(serverGroup.launchConfig.securityGroups, (sgId) => {
+          //TODO(jcwest): remove this once the back-end sends correctly formatted security group IDs
           if( new RegExp('^\\[u\'').test(sgId) ){
             sgId = sgId.split('\'')[1];
           }

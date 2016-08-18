@@ -58,9 +58,7 @@ module.exports = angular.module('spinnaker.openstack.serverGroupCommandBuilder.s
           stack: serverGroupName.stack,
           freeFormDetails: serverGroupName.freeFormDetails,
           credentials: serverGroup.account,
-          //TODO(jwest): update this when multiple load balancers are supported
-          poolId: serverGroup.launchConfig.loadBalancerId,
-          loadBalancers: [],
+          loadBalancers: serverGroup.launchConfig.loadBalancerId,
           region: serverGroup.region,
           minSize: parseInt(serverGroup.scalingConfig.minSize),
           maxSize: parseInt(serverGroup.scalingConfig.maxSize),
@@ -95,10 +93,7 @@ module.exports = angular.module('spinnaker.openstack.serverGroupCommandBuilder.s
             associatePublicIpAddress: serverGroup.launchConfig.associatePublicIpAddress,
             ramdiskId: serverGroup.launchConfig.ramdiskId,
           });
-
-          command.securityGroups = _.map(serverGroup.launchConfig.securityGroups || [], (sgId) => {
-            return /^\[u/.test(sgId) ? sgId.split('\'')[1] : sgId;
-          });
+          command.securityGroups = serverGroup.launchConfig.securityGroups || [];
         }
 
         return command;
