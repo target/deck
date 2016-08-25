@@ -31,7 +31,7 @@
             <input class="form-control input-sm" type="text" ng-model="listener.sslCertificateId"
                    required/></td>
           </td>
-          <td><a href class="sm-label" ng-click="ctrl.removeListener($index)"><span
+          <td ng-if="loadBalancer.listeners.length > 1"><a href class="sm-label" ng-click="ctrl.removeListener($index)"><span
             class="glyphicon glyphicon-trash"></span></a></td>
         </tr>
         </tbody>
