@@ -35,9 +35,13 @@ module.exports = angular.module('spinnaker.loadBalancer.openstack.details.contro
         $scope.loadBalancer = appLoadBalancer;
         $scope.state.loading = false;
 
-        if($scope.loadBalancer.protocol.substring(0,4).toLowerCase() === 'http') {
-          $scope.lbLink = $scope.loadBalancer.protocol.toLowerCase() + '://' + $scope.loadBalancer.ip + ':' + $scope.loadBalancer.externalPort + '/';
-        }
+        $scope.lbLinks = [];
+
+        angular.forEach($scope.loadBalancer.listeners, (value) => {
+          if (value.externalProtocol.substring(0, 4).toLowerCase() === 'http') {
+            $scope.lbLinks.push(value.externalProtocol.toLowerCase() + '://' + $scope.loadBalancer.ip + ':' + value.externalPort + '/');
+          }
+        });
 
       } else {
         autoClose();
