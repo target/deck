@@ -123,6 +123,10 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
     'gce.loadBalancer.advancedSettings.unhealthyThreshold': '<p>Configures the number of unhealthy observations before deservicing an instance from the load balancer.</p><p>Default: <b>2</b></p>',
     'gce.loadBalancer.healthCheck': '(Optional) <b>Health Checks</b> use HTTP requests to determine if a VM instance is healthy.',
     'gce.loadBalancer.portRange': '(Optional) Only packets addressed to ports in the specified <b>Port Range</b> will be forwarded. If left empty, all ports are forwarded. Must be a single port number or two port numbers separated by a dash. Each port number must be between 1 and 65535, inclusive. For example: 5000-5999.',
+    'gce.serverGroup.resizeWithAutoscalingPolicy': `
+      Setting the desired instance count for a server group with an autoscaler is not supported by Spinnaker;
+      if the desired instance count differs from the instance count that the autoscaler wants to maintain for its configured metrics,
+      it will quickly override the desired instance count.`,
     'gce.serverGroup.scalingPolicy.coolDownPeriodSec': 'How long to wait before collecting information from a new instance. This should be at least the time it takes to initialize the instance.',
     'gce.serverGroup.scalingPolicy.cpuUtilization' : 'Autoscaler adds or removes instances to maintain this CPU usage on each instance.',
     'gce.serverGroup.scalingPolicy.loadBalancingUtilization' : 'Autoscaler adds or removes instances to maintain this usage of load-balancing capacity.',
@@ -207,6 +211,7 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
     'pipeline.config.bake.enhancedNetworking': '<p>(Optional) Enable enhanced networking (sr-iov) support for image (requires hvm and trusty base_os).</p>',
     'pipeline.config.bake.amiName': '<p>(Optional) Default = $package-$arch-$ami_suffix-$store_type</p>',
     'pipeline.config.bake.templateFileName': '<p>(Optional) The explicit packer template to use, instead of resolving one from rosco\'s configuration.</p>',
+    'pipeline.config.bake.varFileName': '<p>(Optional) The name of a json file containing key/value pairs to add to the packer command.</p>',
     'pipeline.config.bake.extendedAttributes': '<p>(Optional) Any additional attributes that you want to pass onto rosco, which will be injected into your packer runtime variables.</p>',
     'pipeline.config.gce.bake.baseImage': '<p>(Optional) A GCE image name. For example: ubuntu-1204-precise-v20150910.</p>',
     'pipeline.config.manualJudgment.instructions': '<p>(Optional) Instructions are shown to the user when making a manual judgment.</p><p>May contain HTML.</p>',
@@ -245,7 +250,7 @@ module.exports = angular.module('spinnaker.core.help.contents', [])
       '<p>The <em>lowest</em> strategy means that the cluster with the lowest score is used as the rolled up score</p>' +
       '<p>The <em>average</em> strategy takes the average of all the canary scores</p>',
 
-    'pipeline.config.canary.delayBeforeAnalysis': '<p>The number of minutes to wait before generating an initial canary score.</p>',
+    'pipeline.config.canary.delayBeforeAnalysis': '<p>The number of minutes until the first ACA measurement interval begins.</p>',
 
     'pipeline.config.canary.notificationHours': '<p>Hours at which to send a notification (comma separated)</p>',
 

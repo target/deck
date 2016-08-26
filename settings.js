@@ -92,12 +92,12 @@ window.spinnakerSettings = {
     notifications: false,
     fastProperty: true,
     vpcMigrator: true,
-    clusterDiff: true,
+    clusterDiff: false,
     roscoMode: false,
     netflixMode: false,
     // whether stages affecting infrastructure (like "Create Load Balancer") should be enabled or not
     infrastructureStages: process.env.INFRA_STAGES === 'enabled',
     jobs: false,
-    serialization: false,
+    snapshots: false,
   },
 };

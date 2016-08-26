@@ -279,21 +279,29 @@ module.exports = angular.module('spinnaker.loadBalancer.aws.create.controller', 
       $scope.existingSecurityGroupNames = [];
     }
 
-    function certificateIdAsARN(accountId, certificateId) {
-      if (certificateId && certificateId.indexOf('arn:aws:iam::') !== 0) {
+    function certificateIdAsARN(accountId, certificateId, region, certificateType) {
+      if (certificateId && (certificateId.indexOf('arn:aws:iam::') !== 0 || certificateId.indexOf('arn:aws:acm:') !== 0)) {
         // If they really want to enter the ARN...
-        return 'arn:aws:iam::' + accountId + ':server-certificate/' + certificateId;
+        if (certificateType === 'iam') {
+          return 'arn:aws:iam::' + accountId + ':server-certificate/' + certificateId;
+        }
+        if (certificateType === 'acm') {
+          return 'arn:aws:acm:' + region + ':' + accountId + ':certificate/' + certificateId;
+        }
       }
       return certificateId;
     }
 
-    function formatListeners() {
-      return accountService.getAccountDetails($scope.loadBalancer.credentials).then(function (account) {
-        $scope.loadBalancer.listeners.forEach(function (listener) {
-          listener.sslCertificateId = certificateIdAsARN(account.accountId, listener.sslCertificateId);
+    let formatListeners = () => {
+      return accountService.getAccountDetails($scope.loadBalancer.credentials).then((account) => {
+        $scope.loadBalancer.listeners.forEach((listener) => {
+          listener.sslCertificateId = certificateIdAsARN(account.accountId, listener.sslCertificateId,
+            $scope.loadBalancer.region, listener.sslCertificateType || this.certificateTypes[0]);
         });
       });
-    }
+    };
+
+    this.certificateTypes = _.get(settings, 'providers.aws.loadBalancers.certificateTypes', ['iam', 'acm']);
 
     initializeController();
 
@@ -353,11 +361,18 @@ module.exports = angular.module('spinnaker.loadBalancer.aws.create.controller', 
         updateAvailableSecurityGroups(availableVpcIds);
       if (subnetPurpose) {
         $scope.loadBalancer.vpcId = availableVpcIds.length ? availableVpcIds[0] : null;
+        if (!$scope.state.hideInternalFlag && !$scope.state.internalFlagToggled) {
+          $scope.loadBalancer.isInternal = subnetPurpose.indexOf('internal') > -1;
+        }
         v2modalWizardService.includePage('Security Groups');
       } else {
         $scope.loadBalancer.vpcId = null;
         v2modalWizardService.excludePage('Security Groups');
       }
+    };
+
+    this.internalFlagChanged = () => {
+      $scope.state.internalFlagToggled = true;
     };
 
     this.removeListener = function(index) {

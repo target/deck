@@ -13,11 +13,13 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.configurati
   require('../../instance/gceInstanceType.service.js'),
   require('./../../instance/custom/customInstanceBuilder.gce.service.js'),
   require('../../loadBalancer/elSevenUtils.service.js'),
+  require('../../httpHealthCheck/httpHealthCheck.reader.js'),
 ])
   .factory('gceServerGroupConfigurationService', function(gceImageReader, accountService, securityGroupReader,
                                                           gceInstanceTypeService, cacheInitializer,
                                                           $q, loadBalancerReader, networkReader, subnetReader,
-                                                          settings, _, gceCustomInstanceBuilderService, elSevenUtils) {
+                                                          settings, _, gceCustomInstanceBuilderService, elSevenUtils,
+                                                          gceHttpHealthCheckReader) {
 
     var persistentDiskTypes = [
       'pd-standard',
@@ -67,10 +69,12 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.configurati
         instanceTypes: gceInstanceTypeService.getAllTypesByRegion(),
         persistentDiskTypes: $q.when(angular.copy(persistentDiskTypes)),
         authScopes: $q.when(angular.copy(authScopes)),
+        httpHealthChecks: gceHttpHealthCheckReader.listHttpHealthChecks(),
       }).then(function(backingData) {
         var loadBalancerReloader = $q.when(null);
         var securityGroupReloader = $q.when(null);
         var networkReloader = $q.when(null);
+        var httpHealthCheckReloader = $q.when(null);
         backingData.accounts = _.keys(backingData.credentialsKeyedByAccount);
         backingData.filtered = {};
         command.backingData = backingData;
@@ -97,8 +101,18 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.configurati
             networkReloader = refreshNetworks(command);
           }
         }
+        if (command.autoHealingPolicy) {
+          command.enableAutoHealing = true;
+        }
+        if (_.has(command, 'autoHealingPolicy.healthCheck')) {
+          // Verify http health check is accounted for; otherwise, try refreshing http health checks cache.
+          var httpHealthChecks = getHttpHealthChecks(command);
+          if (!_(httpHealthChecks).contains(command.autoHealingPolicy.healthCheck)) {
+            httpHealthCheckReloader = refreshHttpHealthChecks(command, true);
+          }
+        }
 
-        return $q.all([loadBalancerReloader, securityGroupReloader, networkReloader]).then(function() {
+        return $q.all([loadBalancerReloader, securityGroupReloader, networkReloader, httpHealthCheckReloader]).then(function() {
           attachEventHandlers(command);
         });
       });
@@ -148,11 +162,15 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.configurati
       let result = { dirty: {} };
       let locations = command.regional ? [ command.region ] : [ command.zone ];
       let filtered = gceInstanceTypeService.getAvailableTypesForLocations(command.backingData.instanceTypes, locations);
+      if (locations.every(l => !l)) {
+        return result;
+      }
+
       filtered = sortInstanceTypes(filtered);
       let instanceType = command.instanceType;
       if (_.every([ instanceType, !_.startsWith(instanceType, 'custom'), !_.contains(filtered, instanceType) ])) {
+        result.dirty.instanceType = command.instanceType;
         command.instanceType = null;
-        result.dirty.instanceType = true;
       }
       command.backingData.filtered.instanceTypes = filtered;
       return result;
@@ -164,6 +182,9 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.configurati
         memory = _.get(command, 'viewState.customInstance.memory');
       let { zone, regional, region } = command;
       let location = regional ? region : zone;
+      if (!location) {
+        return result;
+      }
 
       if (zone || regional) {
         _.set(command,
@@ -190,7 +211,7 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.configurati
           'viewState.customInstance.memory',
           undefined
         );
-        result.dirty.instanceType = true;
+        result.dirty.instanceType = command.instanceType;
         command.instanceType = null;
       }
 
@@ -253,6 +274,33 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.configurati
           result.dirty.zone = true;
         }
       }
+      return result;
+    }
+
+    function getHttpHealthChecks(command) {
+      return _(command.backingData.httpHealthChecks[0].results)
+        .filter({provider: 'gce', account: command.credentials})
+        .pluck('name')
+        .valueOf();
+    }
+
+    function configureHttpHealthChecks(command) {
+      var result = { dirty: {} };
+      var filteredData = command.backingData.filtered;
+
+      if (command.credentials === null) {
+        return result;
+      }
+
+      filteredData.httpHealthChecks = getHttpHealthChecks(command);
+
+      if (_.has(command, 'autoHealingPolicy.healthCheck') && !_(filteredData.httpHealthChecks).contains(command.autoHealingPolicy.healthCheck)) {
+        delete command.autoHealingPolicy.healthCheck;
+        result.dirty.autoHealingPolicy = true;
+      } else {
+        result.dirty.autoHealingPolicy = null;
+      }
+
       return result;
     }
 
@@ -333,6 +381,19 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.configurati
           }
         });
       });
+    }
+
+    function refreshHttpHealthChecks(command, skipCommandReconfiguration) {
+      return cacheInitializer.refreshCache('httpHealthChecks')
+        .then(function() {
+          return gceHttpHealthCheckReader.listHttpHealthChecks();
+        })
+        .then(function(httpHealthChecks) {
+          command.backingData.httpHealthChecks = httpHealthChecks;
+          if (!skipCommandReconfiguration) {
+            configureHttpHealthChecks(command);
+          }
+        });
     }
 
     function configureSubnets(command) {
@@ -503,6 +564,8 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.configurati
           } else {
             angular.extend(result.dirty, command.networkChanged().dirty);
           }
+
+          angular.extend(result.dirty, configureHttpHealthChecks(command).dirty);
         } else {
           command.region = null;
         }
@@ -566,6 +629,7 @@ module.exports = angular.module('spinnaker.serverGroup.configure.gce.configurati
       refreshLoadBalancers: refreshLoadBalancers,
       refreshSecurityGroups: refreshSecurityGroups,
       refreshInstanceTypes: refreshInstanceTypes,
+      refreshHttpHealthChecks: refreshHttpHealthChecks,
     };
 
 
