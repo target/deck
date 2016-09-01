@@ -2,26 +2,33 @@
 
 let angular = require('angular');
 
-module.exports = angular.module('spinnaker.cf.serverGroup.details.resize.controller', [
+module.exports = angular.module('spinnaker.openstack.serverGroup.details.resize.controller', [
   require('../../../../core/application/modal/platformHealthOverride.directive.js'),
   require('../../../../core/serverGroup/serverGroup.write.service.js'),
   require('../../../../core/task/monitor/taskMonitorService.js')
 ])
-  .controller('cfResizeServerGroupCtrl', function($scope, $uibModalInstance, serverGroupWriter, taskMonitorService,
+  .controller('openstackResizeServerGroupCtrl', function($scope, $uibModalInstance, serverGroupWriter, taskMonitorService,
                                                    application, serverGroup) {
 
     $scope.serverGroup = serverGroup;
+    $scope.currentSize = {
+      min: serverGroup.scalingConfig.min,
+      max: serverGroup.scalingConfig.max,
+      desired: serverGroup.scalingConfig.desiredSize
+    };
 
     $scope.verification = {};
 
     $scope.command = {
-      newSize: serverGroup.asg.desiredCapacity,
-      memory: serverGroup.memory,
-      disk: serverGroup.disk == 0 ? 1024 : serverGroup.disk,
+      capacity: angular.copy($scope.currentSize),
+      advancedMode: serverGroup.scalingConfig.min !== serverGroup.scalingConfig.max
     };
 
-
     if (application && application.attributes) {
+      if (application.attributes.platformHealthOnly) {
+        $scope.command.interestingHealthProviderNames = ['OpenStack'];
+      }
+
       $scope.command.platformHealthOnlyShowOverride = application.attributes.platformHealthOnlyShowOverride;
     }
 
@@ -30,24 +37,26 @@ module.exports = angular.module('spinnaker.cf.serverGroup.details.resize.control
       if (!$scope.verification.verified) {
         return false;
       }
-      return command.newSize !== null;
+      return command.advancedMode ?
+        command.capacity.min <= command.capacity.max && command.capacity.desired >= command.capacity.min && command.capacity.desired <= command.capacity.max :
+        command.capacity.desired !== null;
     };
 
     this.resize = function () {
       if (!this.isValid()) {
         return;
       }
-      var newSize = $scope.command.newSize;
-      var memory = $scope.command.memory;
-      var disk = $scope.command.disk;
+
+      if (!$scope.command.advancedMode) {
+        $scope.command.capacity.min= $scope.command.desired;
+        $scope.command.capacity.max= $scope.command.desired;
+      }
 
       var submitMethod = function() {
         return serverGroupWriter.resizeServerGroup(serverGroup, application, {
-          capacity: { min: newSize, max: newSize, desired: newSize },
+          capacity: $scope.command.capacity,
           serverGroupName: serverGroup.name,
-          targetSize: newSize, // TODO(GLT): Unify on this or capacity
-          memory: memory,
-          disk: disk,
+          targetSize: $scope.command.capacity.desired,
           region: serverGroup.region,
           interestingHealthProviderNames: $scope.command.interestingHealthProviderNames,
         });
