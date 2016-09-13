@@ -20,13 +20,16 @@ let decorateFn = function ($delegate, jsonListBuilder, spelAutocomplete) {
       }
 
       // the textcomplete plugin needs input texts to marked as 'contenteditable'
+      let spelEnabled = !el.attr('class').contains('nospel');
       el.attr('contenteditable', true);
       spelAutocomplete.addPipelineInfo(scope.pipeline).then((textcompleteConfig) => {
-        el.textcomplete(textcompleteConfig, {
-          maxCount: 1000,
-          zIndex: 5000,
-          dropdownClassName: 'dropdown-menu textcomplete-dropdown spel-dropdown'
-        });
+        if (spelEnabled) {
+          el.textcomplete(textcompleteConfig, {
+            maxCount: 1000,
+            zIndex: 5000,
+            dropdownClassName: 'dropdown-menu textcomplete-dropdown spel-dropdown'
+          });
+        }
       });
 
       function listener (evt) {
@@ -34,16 +37,17 @@ let decorateFn = function ($delegate, jsonListBuilder, spelAutocomplete) {
         let hasSpelPrefix = evt.target.value.indexOf('$') > -1;
         let hasLink = el.parent().nextAll('.spelLink');
 
-
-        if (hasSpelPrefix) {
-          if (hasLink.length < 1) {
-            // Add the link to the docs under the input/textarea
-            el.parent().after('<a class="spelLink" href="http://www.spinnaker.io/docs/pipeline-expressions-guide" target="_blank">Expression Docs</a>');
-
-
+        if (spelEnabled) {
+          if (hasSpelPrefix) {
+            if (hasLink.length < 1) {
+              // Add the link to the docs under the input/textarea
+              el.parent().after('<a class="spelLink" href="http://www.spinnaker.io/docs/pipeline-expressions-guide" target="_blank">Expression Docs</a>');
+            }
+          } else {
+            hasLink.fadeOut(500, function () {
+              this.remove();
+            });
           }
-        } else {
-          hasLink.fadeOut( 500, function() { this.remove(); });
         }
       }
 
