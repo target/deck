@@ -33,6 +33,24 @@ module.exports = angular.module('spinnaker.openstack.loadBalancer.transformer', 
       ]
     };
 
+    function updateHealthCounts(container) {
+      var instances = container.instances;
+      var serverGroups = container.serverGroups || [container];
+      container.instanceCounts = {
+        up: instances.filter(function (instance) {
+          return instance.health[0].state === 'InService';
+        }).length,
+        down: instances.filter(function (instance) {
+          return instance.health[0].state === 'OutOfService';
+        }).length,
+        outOfService: serverGroups.reduce(function (acc, serverGroup) {
+          return serverGroup.instances.filter(function (instance) {
+              return instance.healthState === 'OutOfService';
+            }).length + acc;
+        }, 0),
+      };
+    }
+
     function normalizeLoadBalancer(loadBalancer) {
       loadBalancer.provider = loadBalancer.type;
       loadBalancer.instances = [];
@@ -44,6 +62,8 @@ module.exports = angular.module('spinnaker.openstack.loadBalancer.transformer', 
           delete healthMonitor[k];
         }
       });
+
+      updateHealthCounts(loadBalancer);
 
       loadBalancer.healthMonitor = _.defaults(healthMonitor, defaults.healthMonitor);
 

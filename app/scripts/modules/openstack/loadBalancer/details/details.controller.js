@@ -15,7 +15,8 @@ module.exports = angular.module('spinnaker.loadBalancer.openstack.details.contro
     require('core/utils/selectOnDblClick.directive.js'),
   ])
   .controller('openstackLoadBalancerDetailsController', function ($scope, $state, $uibModal, loadBalancer, app, InsightFilterStateModel,
-                                                                  confirmationModalService, accountService, loadBalancerReader, loadBalancerWriter, subnetReader, $q) {
+                                                                  confirmationModalService, accountService, loadBalancerReader, loadBalancerWriter,
+                                                                  openstackLoadBalancerTransformer, subnetReader, $q) {
 
       let application = app;
 
@@ -37,6 +38,8 @@ module.exports = angular.module('spinnaker.loadBalancer.openstack.details.contro
           $scope.state.loading = false;
 
           $scope.lbLinks = [];
+
+          openstackLoadBalancerTransformer.normalizeLoadBalancer($scope.loadBalancer);
 
           angular.forEach($scope.loadBalancer.listeners, (value) => {
             if (value.externalProtocol.substring(0, 4).toLowerCase() === 'http') {
