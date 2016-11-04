@@ -34,7 +34,7 @@ module.exports = angular.module('spinnaker.openstack.serverGroup.configure.confi
     function configureCommand(application, command) {
       return $q.all({
         credentialsKeyedByAccount: accountService.getCredentialsKeyedByAccount('openstack'),
-        securityGroups: securityGroupReader.loadSecurityGroups(),
+        securityGroups: securityGroupReader.getAllSecurityGroups(),
         loadBalancers: loadBalancerReader.loadLoadBalancers(application.name),
         userDataTypes: $q.when(angular.copy(userDataTypes))
       }).then(function(backingData) {
@@ -42,6 +42,7 @@ module.exports = angular.module('spinnaker.openstack.serverGroup.configure.confi
         backingData.accounts = _.keys(backingData.credentialsKeyedByAccount);
         backingData.filtered = {};
         command.backingData = backingData;
+        backingData.filtered.securityGroups = getRegionalSecurityGroups(command);
 
         if(_.get(command, 'loadBalancers').length) {
           // verify all load balancers are accounted for; otherwise, try refreshing load balancers cache
@@ -85,7 +86,7 @@ module.exports = angular.module('spinnaker.openstack.serverGroup.configure.confi
     }
 
     function getRegionalSecurityGroups(command) {
-      var newSecurityGroups = command.backingData.securityGroups[command.credentials] || { openstack: {}};
+      var newSecurityGroups = _.get(command, ['backingData', 'securityGroups', command.credentials, 'openstack'], {});
       return _.chain(newSecurityGroups[command.region])
         .sortBy('name')
         .value();
